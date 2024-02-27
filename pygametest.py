@@ -35,6 +35,11 @@ board.grid = [ ["X", Wall(1, 0), Wall(2, 0), Wall(3, 0), Wall(4, 0), Wall(5, 0),
 
 hero = Hero(4, 5)
 
+global board_start_x
+global board_start_y
+board_start_x = (WIDTH - board.width * 50) // 2
+board_start_y = (HEIGHT - board.height * 50) // 2
+
 running = True
 while running:
     screen.fill(WHITE)

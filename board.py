@@ -1,6 +1,9 @@
 import pygame
 from piece import *
 
+global board_start_x
+global board_start_y
+
 COR_BRANCA = (255, 255, 255)
 COR_CINZENTA = (243, 243, 243)
 
