@@ -2,7 +2,7 @@ import pygame
 import sys
 from board import Board
 from hero import Hero
-from piece import Piece, Wall, Carbon, Nitrogen 
+from piece import Piece, Wall, Carbon, Nitrogen, Hydrogen, Oxygen
 
 WIDTH = 800
 HEIGHT = 600
@@ -46,6 +46,18 @@ while running:
     hero.draw(screen)
     wall = Wall(5, 5)
     wall.draw(screen)
+    hydrogen = Hydrogen(6,5)
+    hydrogen.draw(screen)
+    
+    oxygen = Oxygen(6,4)
+    oxygen.draw(screen)
+    
+    nitrogen = Nitrogen(6,3)
+    nitrogen.draw(screen)
+    
+    carbon = Carbon(6,2)
+    carbon.draw(screen)
+    
     pygame.display.flip()
     clock.tick(60)
 
