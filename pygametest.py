@@ -1,6 +1,13 @@
 import pygame
 import sys
 
+
+def desenhar_img_circle_vermelho(surface, coluna, linha):
+    x = tabuleiro_x + (coluna + 1) * (tamanho_casa + margem) - 20 / 2
+    y = tabuleiro_y + (linha + 1) * (tamanho_casa + margem) - 20 / 2
+    imagem_redimensionada = pygame.transform.scale(imagem, (20, 20))
+    tela.blit(imagem_redimensionada, (x,y))
+
 # Função para desenhar o círculo vermelho
 def desenhar_circulo_vermelho(surface, coluna, linha):
     x = tabuleiro_x + (coluna + 1) * (tamanho_casa + margem) - margem / 2
@@ -23,6 +30,15 @@ margem = 4
 nr_linhas = 9
 nr_colunas = 9
 largura, altura = nr_linhas * (tamanho_casa + margem) - margem, nr_colunas * (tamanho_casa + margem) - margem
+
+
+pygame.display.set_caption("Exemplo de Imagem em Pygame")
+
+# Carrega a imagem
+imagem = pygame.image.load("/Users/goncalocosta/Desktop/fac/3ano/2semestre/IA/IA_proj/more.png")
+
+# Obtém o retângulo da imagem para obter as dimensões
+retangulo_imagem = imagem.get_rect()
 
 # Cores
 cor_branca = (255, 255, 255)
@@ -59,9 +75,10 @@ for linha in range(nr_linhas):
 for linha in range(1,18):
     for coluna in range(1,18):
         if linha < nr_linhas-2 and coluna < nr_colunas-2:
-            desenhar_circulo_vermelho(tela, coluna, linha)
-            desenhar_sinal_mais_vermelho(tela, coluna, linha)
-
+            #desenhar_circulo_vermelho(tela, coluna, linha)
+            #desenhar_sinal_mais_vermelho(tela, coluna, linha)
+            desenhar_img_circle_vermelho(tela, coluna, linha)
+            
 # Atualizar a tela
 pygame.display.flip()
 
