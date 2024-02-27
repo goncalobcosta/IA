@@ -1,9 +1,9 @@
-from Pieces.wall import Wall
 import pygame
 import sys
 from board import Board
 from hero import Hero
-from Pieces.piece import Piece
+from piece import Piece, Wall, Carbon, Nitrogen 
+
 WIDTH = 800
 HEIGHT = 600
 WHITE = (255, 255, 255)
