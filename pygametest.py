@@ -5,7 +5,7 @@ from hero import Hero
 from piece import Piece, Wall, Carbon, Nitrogen, Hydrogen, Oxygen
 
 WIDTH = 800
-HEIGHT = 600
+HEIGHT = 800
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
@@ -20,8 +20,13 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 # Create game objects
-board = Board(10, 8)
+board = Board(9, 8)
 hero = Hero("hi", 1, 1)
+
+global board_start_x
+global board_start_y
+board_start_x = (WIDTH - board.width * 50) // 2
+board_start_y = (HEIGHT - board.height * 50) // 2
 
 running = True
 while running:

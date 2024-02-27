@@ -13,4 +13,4 @@ class Hero:
         self.position = (x + dx, y + dy)
 
     def draw(self, surface):
-        pygame.draw.rect(surface, (255, 0, 0), (self.position[0]*50, self.position[1]*50, 50, 50))
+        pygame.draw.rect(surface, (255, 0, 0), ((800 - 9 * 50) // 2 + self.position[0]*50, (800 - 8 * 50) // 2 + self.position[1]*50, 46, 46))

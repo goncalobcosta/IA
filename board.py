@@ -1,7 +1,10 @@
 import pygame
 
+global board_start_x
+global board_start_y
+
 COR_BRANCA = (255, 255, 255)
-COR_CINZENTA = (180, 180, 180)
+COR_CINZENTA = (243, 243, 243)
 
 class Board:
     def __init__(self, width, height):
@@ -33,5 +36,4 @@ class Board:
         # Draw the grid
         for y in range(self.height):
             for x in range(self.width):
-                pygame.draw.rect(surface, COR_BRANCA , (x*50, y*50, 50, 50), 2)
-                pygame.draw.rect(surface, COR_CINZENTA, (x*50.5, y*50.5, 46, 46))
+                pygame.draw.rect(surface, COR_CINZENTA, ((800 - self.width * 50) // 2 + x*50, (800 - self.height * 50) // 2 + y*50, 46, 46))

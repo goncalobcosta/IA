@@ -12,7 +12,7 @@ class Wall(Piece):
         super().__init__(connections=0, x=x, y=y)
         
     def draw(self, surface):
-        pygame.draw.rect(surface, (239,175,26), (self.x*50.5, self.y*50.5, 45, 45))
+        pygame.draw.rect(surface, (239,175,26), ((800 - 9 * 50) // 2 + self.x*50, (800 - 8 * 50) // 2 + self.y*50, 46, 46)) #em vez do 9 e do 10 devia ser board.width
     
 class Hydrogen(Piece):
     def __init__(self, x, y):
@@ -20,7 +20,7 @@ class Hydrogen(Piece):
         self.image = pygame.transform.smoothscale(pygame.image.load("atoms/hydrogen.png").convert_alpha(), (50, 50))
         
     def draw(self, surface):
-        surface.blit(self.image, (self.x*50, self.y*50)) 
+        surface.blit(self.image, (((800 - 9 * 50) // 2 + self.x*50, ((800 - 8 * 50) // 2 + self.y*50)) 
                
 class Oxygen(Piece):
     def __init__(self, x, y):
@@ -28,15 +28,15 @@ class Oxygen(Piece):
         self.image = pygame.transform.smoothscale(pygame.image.load("atoms/oxygen.png").convert_alpha(), (50, 50))
         
     def draw(self, surface):
-        surface.blit(self.image, (self.x*50, self.y*50)) 
-
+        pygame.draw.rect(self.image, self.color, ((800 - 9 * 50) // 2 + self.x*50, (800 - 8 * 50) // 2 + self.y*50, 46, 46))
+     
 class Nitrogen(Piece):
     def __init__(self, x, y):
         super().__init__(connections=3, x=x, y=y)
         self.image = pygame.transform.smoothscale(pygame.image.load("atoms/nitrogen.png").convert_alpha(), (50, 50))
 
     def draw(self, surface):
-        surface.blit(self.image, (self.x*50, self.y*50)) 
+        pygame.draw.rect(self.image, self.color, ((800 - 9 * 50) // 2 + self.x*50, (800 - 8 * 50) // 2 + self.y*50, 46, 46))
      
 class Carbon(Piece):
     def __init__(self, x, y):
@@ -44,5 +44,5 @@ class Carbon(Piece):
         self.image = pygame.transform.smoothscale(pygame.image.load("atoms/carbon.png").convert_alpha(), (50, 50))
 
     def draw(self, surface):
-        surface.blit(self.image, (self.x*50, self.y*50)) 
-       
+        pygame.draw.rect(self.image, self.color, ((800 - 9 * 50) // 2 + self.x*50, (800 - 8 * 50) // 2 + self.y*50, 46, 46))
+    
