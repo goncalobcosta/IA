@@ -17,7 +17,7 @@ class Wall(Piece):
 class Hydrogen(Piece):
     def __init__(self, x, y):
         super().__init__(connections=1, x=x, y=y)
-        self.image = pygame.transform.scale(pygame.image.load("atoms/hydrogen.png").convert_alpha(), (50, 50))
+        self.image = pygame.transform.smoothscale(pygame.image.load("atoms/hydrogen.png").convert_alpha(), (50, 50))
         
     def draw(self, surface):
         surface.blit(self.image, (self.x*50, self.y*50)) 
@@ -25,7 +25,7 @@ class Hydrogen(Piece):
 class Oxygen(Piece):
     def __init__(self, x, y):
         super().__init__(connections=2, x=x, y=y)
-        self.image = pygame.transform.scale(pygame.image.load("atoms/oxygen.png").convert_alpha(), (50, 50))
+        self.image = pygame.transform.smoothscale(pygame.image.load("atoms/oxygen.png").convert_alpha(), (50, 50))
         
     def draw(self, surface):
         surface.blit(self.image, (self.x*50, self.y*50)) 
@@ -33,7 +33,7 @@ class Oxygen(Piece):
 class Nitrogen(Piece):
     def __init__(self, x, y):
         super().__init__(connections=3, x=x, y=y)
-        self.image = pygame.transform.scale(pygame.image.load("atoms/nitrogen.png").convert_alpha(), (50, 50))
+        self.image = pygame.transform.smoothscale(pygame.image.load("atoms/nitrogen.png").convert_alpha(), (50, 50))
 
     def draw(self, surface):
         surface.blit(self.image, (self.x*50, self.y*50)) 
@@ -41,8 +41,8 @@ class Nitrogen(Piece):
 class Carbon(Piece):
     def __init__(self, x, y):
         super().__init__(connections=4, x=x, y=y)
-        self.image = pygame.transform.scale(pygame.image.load("atoms/carbon.png").convert_alpha(), (50, 50))
+        self.image = pygame.transform.smoothscale(pygame.image.load("atoms/carbon.png").convert_alpha(), (50, 50))
 
     def draw(self, surface):
         surface.blit(self.image, (self.x*50, self.y*50)) 
-    
+       
