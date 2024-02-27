@@ -1,16 +1,18 @@
 import pygame
 
 class Hero:
-    def __init__(self, name, x, y):
-        self.name = name
-        self.position = (x, y)
+    def __init__(self, x, y):
+        self.pieces = []
+        self.x = x
+        self.y = y 
+        self.image = pygame.transform.smoothscale(pygame.image.load("atoms/hero.png").convert_alpha(), (50, 50))
 
-    def set_position(self, x, y):
-        self.position = (x, y)
-
-    def move(self, dx, dy):
-        x, y = self.position
-        self.position = (x + dx, y + dy)
-
+    def move(self, x, y):
+        self.x += x 
+        self.y += y
+        
+    def canMove(self, dir_x, dir_y, board):
+        return board.isEmpty(self.x + dir_x, self.y + dir_y)
+            
     def draw(self, surface):
-        pygame.draw.rect(surface, (255, 0, 0), (self.position[0]*50, self.position[1]*50, 50, 50))
+        surface.blit(self.image, ((800 - 9 * 50) // 2 + self.x*50, (800 - 8 * 50) // 2 + self.y*50, 46, 46))

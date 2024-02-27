@@ -1,7 +1,8 @@
 import pygame
+from piece import *
 
 COR_BRANCA = (255, 255, 255)
-COR_CINZENTA = (180, 180, 180)
+COR_CINZENTA = (243, 243, 243)
 
 class Board:
     def __init__(self, width, height):
@@ -10,13 +11,11 @@ class Board:
         self.grid = [[None] * width for _ in range(height)]
 
     def is_valid_position(self, x, y):
-        return 0 <= x < self.width and 0 <= y < self.height
+        return 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] != "X"
 
-    def add_piece(self, piece, x, y):
-        if self.is_valid_position(x, y):
-            self.grid[y][x] = piece
-            piece.set_position(x, y)
-
+    def isEmpty(self, x, y):
+        return 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] == None
+    
     def move_piece(self, piece, new_x, new_y):
         if self.is_valid_position(new_x, new_y):
             old_x, old_y = piece.position
@@ -33,5 +32,10 @@ class Board:
         # Draw the grid
         for y in range(self.height):
             for x in range(self.width):
-                pygame.draw.rect(surface, COR_BRANCA , (x*50, y*50, 50, 50), 2)
-                pygame.draw.rect(surface, COR_CINZENTA, (x*50.5, y*50.5, 46, 46))
+                if self.grid[y][x] == "X":
+                    continue 
+                pygame.draw.rect(surface, COR_CINZENTA, ((800 - self.width * 50) // 2 + x*50, (800 - self.height * 50) // 2 + y*50, 46, 46))
+                if self.grid[y][x] != None:
+                    self.grid[y][x].draw(surface)
+        
+                    
