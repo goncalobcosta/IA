@@ -8,71 +8,65 @@ COR_BRANCA = (255, 255, 255)
 COR_CINZENTA = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, grid, compound):
+    def __init__(self, width, height, grid, atoms, compound):
         self.width = width
         self.height = height
         self.grid = grid
-        self.compound = compound #[(4,5), (5,5)]
-  
-    def inBoard(self, x, y):
-        return 0 <= x < self.width and 0 <= y < self.height
+        self.atoms = atoms
+        self.compound = compound 
     
-    def checkarroundAtoms(self):
-        new_atoms = []
-        for (x, y) in self.compound:
-            print(self.grid[y][x])
-            #print(self.grid[y][x].isHero)
-            #print(self.grid[y][x].name)
-            if isinstance(self.grid[y][x], Atom) and self.grid[y][x].connections > 0:
-                if self.grid[y][x].connections > 0:
-                    if self.inBoard(x, y - 1) and isinstance(self.grid[y - 1][x], Atom) and (x, y - 1) not in self.compound and self.grid[y - 1][x].connections > 0:
-                        new_atoms.append((x, y - 1))
-                        self.grid[y - 1][x].connections -= 1
-                        self.grid[y][x].connections -= 1
-                        self.grid[y - 1][x].isConnected = True
-                        self.grid[y][x].isConnected = True
-                    if self.inBoard(x, y + 1) and isinstance(self.grid[y + 1][x], Atom) and (x, y + 1) not in self.compound and self.grid[y + 1][x].connections > 0:
-                        new_atoms.append((x, y + 1))
-                        self.grid[y + 1][x].connections -= 1
-                        self.grid[y][x].connections -= 1
-                        self.grid[y + 1][x].isConnected = True
-                        self.grid[y][x].isConnected = True
-                    if self.inBoard(x - 1, y) and isinstance(self.grid[y][x - 1], Atom) and (x - 1, y) not in self.compound and self.grid[y][x - 1].connections > 0:
-                        new_atoms.append((x - 1, y))
-                        self.grid[y][x - 1].connections -= 1
-                        self.grid[y][x].connections -= 1
-                        self.grid[y][x - 1].isConnected = True
-                        self.grid[y][x].isConnected = True
-                    if self.inBoard(x + 1, y) and isinstance(self.grid[y][x + 1], Atom) and (x + 1, y) not in self.compound and self.grid[y][x + 1].connections > 0:
-                        new_atoms.append((x + 1, y))
-                        self.grid[y][x + 1].connections -= 1
-                        self.grid[y][x].connections -= 1
-                        self.grid[y][x + 1].isConnected = True
-                        self.grid[y][x].isConnected = True
-            self.compound = self.compound + new_atoms
-
-    def canMove(self, dx, dy):
-        for (x, y) in self.compound:
+    def inBoard(self, x, y):
+        return (0 <= x < self.width and 0 <= y < self.height) and self.grid[y][x] == None
+    
+    def canPush(self, x, y, dx, dy):
+        return self.grid[y+2*dy][x+2*dx] == None
+    
+    def nextToAtom(self, x, y):
+        return any(atom.pos == (x,y) for atom in self.atoms)
+    
+    def handleMove(self, dx, dy):
+        atomsToPush = []
+        for atom in self.compound:
+            x, y = atom.pos
             if not self.inBoard(x+dx, y+dy):
-                return False
-            if self.grid[y+dy][x+dx] == None:
-                continue
-            if self.grid[y+dy][x+dx] == "W" or self.grid[y+dy][x+dx] == "X" :
-                return False
-            if not self.grid[y+dy][x+dx].isConnected:
-                return False
-        return True
-
+                return
+            if self.nextToAtom(x+dx, y+dy) :
+                if not self.canPush(x, y, dx, dy):
+                    return 
+                atomsToPush += [atom for atom in self.atoms if atom.pos == (x+dx, y+dy)]
+                
+        self.pushAtoms(atomsToPush, dx, dy)    
+        self.moveCompound(dx, dy)
+        
+        
+    def pushAtoms(self, atoms, dx, dy):
+        for atom in atoms:
+            atom.move(dx, dy)
+                
     def moveCompound(self, dx, dy):
-        l = []
-        for (x, y) in self.compound:
-            self.grid[y][x], self.grid[y + dy][x + dx] = None, self.grid[y][x]
-            l.append((x+dx, y+dy))
-        self.compound = l
-        print(self.compound)
-        self.checkarroundAtoms()
-
-    def draw(self, surface):
+        for atom in self.compound:
+            atom.move(dx, dy)
+        self.connectAtoms()
+        
+            
+    def connectAtom(self, connection):
+        atom1, atom2 = connection
+        atom1.connections -= 1
+        atom2.connections -= 1
+        self.compound.append(atom2)
+        self.atoms.remove(atom2)
+    
+    def connectAtoms(self):
+        connections = []
+        for atom in self.compound:
+            for single in self.atoms:
+                if atom.canConnectTo(single):
+                    connections.append((atom, single))
+       
+        for connection in connections:
+            self.connectAtom(connection)
+    
+    def drawBoard(self, surface):
         for y in range(self.height):
             for x in range(self.width):
                 if self.grid[y][x] == "X":
@@ -81,7 +75,13 @@ class Board:
                     pygame.draw.rect(surface, (239,175,26), ((800 - 9 * 50) // 2 + x*50, (800 - 8 * 50) // 2 + y*50, 46, 46))
                     continue
                 pygame.draw.rect(surface, COR_CINZENTA, ((800 - self.width * 50) // 2 + x*50, (800 - self.height * 50) // 2 + y*50, 46, 46))
-                if self.grid[y][x] != None:
-                    self.grid[y][x].draw(surface, x, y)
+                   
+    def draw(self, surface):
+        self.drawBoard(surface)
         
-                    
+        for atom in self.atoms:
+            atom.draw(surface)
+        
+        for atom in self.compound:
+            atom.draw(surface)
+                
