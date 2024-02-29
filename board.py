@@ -1,19 +1,21 @@
 import pygame
 from atom import *
+from circle import *
 
 global board_start_x
 global board_start_y
 
 
 class Board:
-    def __init__(self, width, height, grid, atoms, compound, wallColor):
+    def __init__(self, width, height, grid, atoms, compound, circles, wallColor):
         self.width = width
         self.height = height
         self.grid = grid
         self.atoms = atoms
         self.compound = compound 
         self.wallColor = wallColor
-    
+        self.circles = circles
+        
     def inBoard(self, x, y):
         return (0 <= x < self.width and 0 <= y < self.height) and self.grid[y][x] == None
     
@@ -82,4 +84,6 @@ class Board:
         
         for atom in self.compound:
             atom.draw(surface, self.width, self.height)
-                
+        
+        for circle in self.circles:
+            circle.draw(surface, self.width, self.height)
