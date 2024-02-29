@@ -18,14 +18,14 @@ class Atom:
         x, y = self.pos
         self.pos = (x+dx, y+dy)
 
-    def draw(self, surface):
-        path = "atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
+    def draw(self, surface, offX, offY):
+        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
         image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         x, y = self.pos
-        surface.blit(image, ((800 - 9 * 50) // 2 + x*50, ((800 - 8 * 50) // 2 + y*50)))
+        surface.blit(image, ((800 - offX * 50) // 2 + x*50, ((600 - offY * 50) // 2 + y*50)))
 
     def canConnectTo(self, atom):
-        if self.connections == 0 or atom.connections > self.connections:
+        if self.connections == 0 or atom.connections == 0:
             return False
         x, y = self.pos
         xx, yy = atom.pos
