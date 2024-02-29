@@ -1,5 +1,6 @@
 import pygame
 from atom import *
+from circle import *
 
 global board_start_x
 global board_start_y
@@ -8,12 +9,13 @@ COR_BRANCA = (255, 255, 255)
 COR_CINZENTA = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, grid, atoms, compound):
+    def __init__(self, width, height, grid, atoms, compound, circles):
         self.width = width
         self.height = height
         self.grid = grid
         self.atoms = atoms
         self.compound = compound 
+        self.circles = circles
     
     def inBoard(self, x, y):
         return (0 <= x < self.width and 0 <= y < self.height) and self.grid[y][x] == None
@@ -84,4 +86,7 @@ class Board:
         
         for atom in self.compound:
             atom.draw(surface)
+
+        for circle in self.circles:
+            circle.draw(surface)
                 

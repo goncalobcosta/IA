@@ -2,6 +2,7 @@ import pygame
 import sys
 from board import Board
 from atom import *
+from circle import *
 
 WIDTH = 800
 HEIGHT = 800
@@ -25,9 +26,10 @@ grid = [["X", "W", "W", "W", "W", "W", "W", "W", "X"],
 
 atoms = [Atom("hydrogen", (3, 2)), Atom("hydrogen", (5, 2)), Atom("hydrogen", (2, 6)), Atom("hydrogen", (6, 6))]
 compound = [Atom("carbon", (4, 5), True)]
+circles = [Circle("red", (3,1)), Circle("blue", (4,1)), Circle("green", (5,1))]
 
 # Create game objects
-board = Board(9, 8, grid, atoms, compound)
+board = Board(9, 8, grid, atoms, compound, circles)
 
 
 global board_start_x
