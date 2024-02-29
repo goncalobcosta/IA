@@ -3,9 +3,7 @@ from atom import *
 from circle import *
 
 # Screen Size
-WIDTH = 800
-HEIGHT = 600
-SQUARE = 50
+
 
 # Colors
 WHITE = (255, 255, 255)
@@ -195,5 +193,9 @@ class Board:
       
     def draw(self, surface):
         self.drawBoard(surface)
-        
-        
+
+        for pos, atom in self.atoms.items():
+            atom.draw(surface, self.width, self.height, pos)
+
+        for pos, atom in self.compound.items():
+            atom.draw(surface, self.width, self.height, pos)

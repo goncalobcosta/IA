@@ -172,6 +172,5 @@ match_case_time = end_time - start_time
 print("Time taken for if-elifs:", if_elifs_time)
 print("Time taken for match-case:", match_case_time)
 
-
 game = Game()
 game.play()
