@@ -2,20 +2,6 @@ import pygame
 import sys
 from level import * 
 
-WIDTH = 800
-HEIGHT = 600
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-DARK_GRAY = (150, 150, 150)
-GRAY = (192, 192, 192)
-RED = (255, 138, 128)
-YELLOW = (254, 216, 119)
-BLUE = (166, 197, 254)
-GREEN = (175, 219, 140)
-
-board_start_x = (WIDTH - 9 * 50) // 2
-board_start_y = (HEIGHT - 8 * 50) // 2
-
 
 class Game:
     def __init__(self):
@@ -133,6 +119,59 @@ class Game:
     def quit(self):
         pygame.quit()
         sys.exit()
-        
+
+
+#game = Game()
+#game.play()
+
+import time
+
+def if_elifs(value):
+    if value == 1:
+        return "One"
+    elif value == 2:
+        return "Two"
+    elif value == 3:
+        return "Three"
+    elif value == 4:
+        return "Four"
+    elif value == 5:
+        return "Five"
+    else:
+        return "Other"
+
+def match_case(value):
+    match value:
+        case 1:
+            return "One"
+        case 2:
+            return "Two"
+        case 3:
+            return "Three"
+        case 4:
+            return "Four"
+        case 5:
+            return "Five"
+        case _:
+            return "Other"
+
+# Timing if-elifs
+start_time = time.time()
+for i in range(1000000):
+    result = if_elifs(i % 7)
+end_time = time.time()
+if_elifs_time = end_time - start_time
+
+# Timing match-case
+start_time = time.time()
+for i in range(1000000):
+    result = match_case(i % 7)
+end_time = time.time()
+match_case_time = end_time - start_time
+
+print("Time taken for if-elifs:", if_elifs_time)
+print("Time taken for match-case:", match_case_time)
+
+
 game = Game()
 game.play()
