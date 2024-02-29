@@ -26,6 +26,13 @@ class Board:
         return any(atom.pos == (x,y) for atom in self.atoms)
     
     def handleMove(self, dx, dy):
+        
+        self.checkCircles(dx, dy)
+        ll = [(atom.name, atom.pos) for atom in self.atoms]
+        ll2 = [(atom.name, atom.pos) for atom in self.compound]
+        print(ll)
+        print(ll2)
+
         atomsToPush = []
         for atom in self.compound:
             x, y = atom.pos
@@ -37,29 +44,67 @@ class Board:
                 atomsToPush += [atom for atom in self.atoms if atom.pos == (x+dx, y+dy)]
                 
         self.pushAtoms(atomsToPush, dx, dy)    
-        self.checkCircles(dx, dy)
         self.moveCompound(dx, dy)
         
     def checkCircles(self, dx, dy):
         for circle in self.circles:
             if (circle.name == "green"):
-                self.handleDoubeConnections(circle.pos, dx, dy)
+                self.addConnection(circle.pos, dx, dy)
+            if (circle.name == "red"):
+                self.removeConnection(circle.pos, dx, dy)
+            if (circle.name == "blue"):
+                self.rotateCompound(circle.pos, dx, dy)
            
-    def handleDoubeConnections(self, pos, dx, dy):
+    def addConnection(self, pos, dx, dy):
         x, y = pos 
         candidates = []
-        if dx == 0:
-            candidates.append((x, y))
-            candidates.append((x + dy, y))
-        elif dy == 0:
-            candidates.append((x, y))
-            candidates.append((x, y + dx))
+        if dx == 0 and dy == -1:
+            candidates = [(x, y + 1), (x + 1, y + 1)]
+        if dx == 0 and dy == 1:
+            candidates = [(x, y), (x + 1, y)]
+        if dx == -1 and dy == 0:
+            candidates = [(x + 1, y + 1), (x + 1, y)]
+        if dx == 1 and dy == 0:
+            candidates = [(x, y), (x, y + 1)]
         
-  
         l = [atom for atom in self.compound if atom.pos in candidates]
 
         if len(l) == 2 and l[0].connections > 0 and l[1].connections > 0:
             self.doubleConnect(l[1], l[0])
+
+    def removeConnection(self, pos, dx, dy):
+        x, y = pos 
+        candidates = []
+        if dx == 0 and dy == -1:
+            candidates = [(x, y + 1), (x + 1, y + 1)]
+        if dx == 0 and dy == 1:
+            candidates = [(x, y), (x + 1, y)]
+        if dx == -1 and dy == 0:
+            candidates = [(x + 1, y + 1), (x + 1, y)]
+        if dx == 1 and dy == 0:
+            candidates = [(x, y), (x, y + 1)]
+        
+        l = [atom for atom in self.compound if atom.pos in candidates]
+
+        if len(l) == 2 and l[1].notFull() and l[0].notFull():
+            self.removeAtom(l[1], l[0])
+    
+    def rotateCompound(self, pos, dx, dy):
+        x, y = pos 
+        candidates = []
+        if dx == 0 and dy == -1:
+            candidates = [(x, y + 1), (x + 1, y + 1)]
+        if dx == 0 and dy == 1:
+            candidates = [(x, y), (x + 1, y)]
+        if dx == -1 and dy == 0:
+            candidates = [(x + 1, y + 1), (x + 1, y)]
+        if dx == 1 and dy == 0:
+            candidates = [(x, y), (x, y + 1)]
+        
+        l = [atom for atom in self.compound if atom.pos in candidates]
+
+        if len(l) == 2:
+            self.rotateAtom(l[1], l[0], dx, dy)
         
     def doubleConnect(self, atom, atom2):
         atom.connections -= 1
@@ -90,7 +135,43 @@ class Board:
        
         for connection in connections:
             self.connectAtom(connection)
+
+    def removeAtom(self, atom1, atom2):
+
+        if (atom1.connections == 0): 
+            self.atoms.append(atom1)
+            self.compound.remove(atom1)
+        if (atom2.connections == 0): 
+            self.atoms.append(atom2)
+            self.compound.remove(atom2)
+        atom1.connections += 1
+        atom2.connections += 1
     
+    def rotateAtom(self, atom1, atom2, dx, dy):
+        (x1, y1) = atom1.pos
+        (x2, y2) = atom2.pos
+        
+        if dx == 0 and dy == -1: #cima
+            if (x1 < x2): 
+                atom2.move(-1, 1)
+            else: 
+                atom1.move(-1, 1)
+        if dx == 0 and dy == 1: #baixo
+            if (x1 < x2): 
+                atom1.move(1, -1)
+            else: 
+                atom2.move(1, -1)
+        if dx == -1 and dy == 0: #esquerda
+            if (y1 < y2): 
+                atom1.move(1, 1)
+            else: 
+                atom2.move(1, 1)
+        if dx == 1 and dy == 0: #direita
+            if (y1 < y2): 
+                atom2.move(-1, -1)  
+            else: 
+                atom1.move(-1, -1)  
+
     def drawBoard(self, surface):
         for y in range(self.height):
             for x in range(self.width):

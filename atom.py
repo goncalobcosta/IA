@@ -34,3 +34,15 @@ class Atom:
         if x == xx and abs(y - yy) == 1:
             return True
         return False
+    
+    def notFull(self):
+        if self.name == "carbon":
+            print("hi")
+            return self.connections < 4
+        elif self.name == "nitrogen":
+            return self.connections < 3
+        elif self.name == "oxygen":
+            return self.connections < 2
+        elif self.name == "hydrogen":
+            return self.connections < 1
+        return False
