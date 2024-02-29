@@ -6,6 +6,7 @@ WIDTH = 800
 HEIGHT = 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+DARK_GRAY = (150, 150, 150)
 GRAY = (192, 192, 192)
 RED = (255, 138, 128)
 YELLOW = (254, 216, 119)
@@ -19,11 +20,11 @@ board_start_y = (HEIGHT - 8 * 50) // 2
 class Game:
     def __init__(self):
         pygame.init()
-        self.state = "Menu"
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.titleFont = pygame.font.Font("resources/font/Quicksand-Medium.ttf", 100) 
         self.playFont = pygame.font.Font("resources/font/Quicksand-Regular.ttf", 30)
+        self.commandFont = pygame.font.Font("resources/font/Quicksand-Regular.ttf", 20)
         self.option = 0
         
     def play(self):
@@ -77,16 +78,22 @@ class Game:
     
     def playGame(self):
         self.board = Level(self.option).getLevelBoard()
-        while (self.option != 3):
+        while (True):
             self.screen.fill(WHITE)
             for event in pygame.event.get():                
                 if event.type == pygame.QUIT:
                     break
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_l:
                         self.quit()
-                    if event.key == pygame.K_q:
+                        break
+                    elif event.key == pygame.K_m:
+                        self.play()
+                        self.quit()
+                        break
+                    elif event.key == pygame.K_r:
                         self.resetGame()
+                        
                     elif event.key == pygame.K_UP :
                         self.board.handleMove(0, -1)
                     elif event.key == pygame.K_DOWN:
@@ -98,10 +105,27 @@ class Game:
 
             # Draw game objects
             self.board.draw(self.screen)
-
+            self.drawCommands()
+            
             pygame.display.flip()
             self.clock.tick(60)
-        self.quit()
+        
+        
+    def drawCommands(self):
+        reset = self.commandFont.render("R : reset", True, DARK_GRAY)
+        menu = self.commandFont.render("M : menu", True, DARK_GRAY)
+        hint = self.commandFont.render("H : hint", True, DARK_GRAY)
+        leave = self.commandFont.render("L : leave", True, DARK_GRAY)
+        
+        reset_rect = reset.get_rect(topleft=(20, 20))
+        menu_rect = menu.get_rect(topleft=(20, 45))
+        hint_rect = hint.get_rect(topleft=(20, 70))
+        leave_rect = leave.get_rect(topleft=(20, 95))
+        
+        self.screen.blit(reset, reset_rect)
+        self.screen.blit(menu, menu_rect)
+        self.screen.blit(hint, hint_rect)
+        self.screen.blit(leave, leave_rect)
         
     def resetGame(self):
         self.board = Level(self.option).getLevelBoard()
