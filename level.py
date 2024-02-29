@@ -32,8 +32,9 @@ class Level:
 
             atoms = [Atom("hydrogen", (5, 1)), Atom("hydrogen", (5, 4)), Atom("nitrogen", (2, 1))]
             compound = [Atom("nitrogen", (2, 4), True)] 
+            circles = [Circle("blue", (1,2)), Circle("green", (5,2)), Circle("green", (3,1))]
             wallColor = (94, 197, 228)
-            return Board(8, 6, grid, atoms, compound, [], wallColor)
+            return Board(8, 6, grid, atoms, compound, circles, wallColor)
         
         elif (self.level == 2):
             grid = [["X", "W", "W", "W", "W", "W", "W", "W", "X"],

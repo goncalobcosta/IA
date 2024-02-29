@@ -37,8 +37,33 @@ class Board:
                 atomsToPush += [atom for atom in self.atoms if atom.pos == (x+dx, y+dy)]
                 
         self.pushAtoms(atomsToPush, dx, dy)    
+        self.checkCircles(dx, dy)
         self.moveCompound(dx, dy)
         
+    def checkCircles(self, dx, dy):
+        for circle in self.circles:
+            if (circle.name == "green"):
+                self.handleDoubeConnections(circle.pos, dx, dy)
+           
+    def handleDoubeConnections(self, pos, dx, dy):
+        x, y = pos 
+        candidates = []
+        if dx == 0:
+            candidates.append((x, y))
+            candidates.append((x + dy, y))
+        elif dy == 0:
+            candidates.append((x, y))
+            candidates.append((x, y + dx))
+        
+  
+        l = [atom for atom in self.compound if atom.pos in candidates]
+
+        if len(l) == 2 and l[0].connections > 0 and l[1].connections > 0:
+            self.doubleConnect(l[1], l[0])
+        
+    def doubleConnect(self, atom, atom2):
+        atom.connections -= 1
+        atom2.connections -= 1
         
     def pushAtoms(self, atoms, dx, dy):
         for atom in atoms:
@@ -75,7 +100,10 @@ class Board:
                     pygame.draw.rect(surface, self.wallColor, ((800 - self.width * 50) // 2 + x*50, (600 - self.height * 50) // 2 + y*50, 46, 46))
                     continue
                 pygame.draw.rect(surface, (243, 243, 243), ((800 - self.width * 50) // 2 + x*50, (600 - self.height * 50) // 2 + y*50, 46, 46))
-                   
+    
+
+        
+                  
     def draw(self, surface):
         self.drawBoard(surface)
         
