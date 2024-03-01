@@ -35,6 +35,12 @@ class Level:
 
             wallColor = (239, 175, 26)
   
+            circles = {
+                (5, 5) : Circle(BREAK),
+                (5, 6) : Circle(ADD),
+                (6, 7) : Circle(ROTATE),
+            }
+
             return Board(9, 8, walls, blank, atoms, compound, {}, wallColor)
         
         

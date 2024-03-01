@@ -2,8 +2,13 @@ import pygame
 from atom import *
 from circle import *
 
-# Screen Size
+# DIRECTIONS
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
 
+DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
 # Colors
 WHITE = (255, 255, 255)
@@ -27,62 +32,70 @@ class Board:
         self.circles = circles
         self.wallColor = wallColor
         
-    def inBoard(self, x, y):
-        return (0 <= x < self.width and 0 <= y < self.height) and self.grid[y][x] == None
+    def inBoard(self, pos):
+        return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
     
     def canPush(self, x, y, dx, dy):
         return self.grid[y+2*dy][x+2*dx] == None
     
-    def nextToAtom(self, x, y):
-        return any(atom.pos == (x,y) for atom in self.atoms)
+
+    def canMove(self, move):
+        for pos in self.compound.keys():
+            nextPos = (pos[0] + move[0], pos[1] + move[1])
+            if not self.inBoard(nextPos):
+                return False
+            if self.atoms.get(nextPos) is not None:
+                return False
+        return True
     
-    def handleMove(self, dx, dy):
+    def handleMove(self, move):
+        if not self.canMove(move):
+            return 
+        self.handleCircles(move)
+        self.handlePushes(move)
+        self.moveCompound(move)
         
-        self.checkCircles(dx, dy)
-        ll = [(atom.name, atom.pos) for atom in self.atoms]
-        ll2 = [(atom.name, atom.pos) for atom in self.compound]
-        print(ll)
-        print(ll2)
+    def handlePushes(self, move):
+        for pos in self.compound.keys():
+            nextPos = (pos[0] + move[0], pos[1] + move[1])
+            if self.atoms.get(nextPos) is not None:
+                print(self.atoms[nextPos])
 
-        atomsToPush = []
-        for atom in self.compound:
-            x, y = atom.pos
-            if not self.inBoard(x+dx, y+dy):
-                return
-            if self.nextToAtom(x+dx, y+dy) :
-                if not self.canPush(x, y, dx, dy):
-                    return 
-                atomsToPush += [atom for atom in self.atoms if atom.pos == (x+dx, y+dy)]
-                
-        self.pushAtoms(atomsToPush, dx, dy)    
-        self.moveCompound(dx, dy)
-        
-    def checkCircles(self, dx, dy):
-        for circle in self.circles:
-            if (circle.name == "green"):
-                self.addConnection(circle.pos, dx, dy)
-            if (circle.name == "red"):
-                self.removeConnection(circle.pos, dx, dy)
-            if (circle.name == "blue"):
-                self.rotateCompound(circle.pos, dx, dy)
-           
-    def addConnection(self, pos, dx, dy):
+    def handleCircles(self, move):
+        for pos, circle in self.circles.items():
+            atom1, atom2 = self.getCandidates(pos, move)
+            if (atom1 is not None and atom2 is not None):
+                if (circle.name == "green"):
+                    self.addConnection(atom1, atom2)
+                '''
+                elif (circle.name == "red"):
+                    self.removeConnection(circle.pos, dx, dy)
+                elif (circle.name == "blue"):
+                    self.rotateCompound(circle.pos, dx, dy)
+           '''
+    
+    def getCandidates(self, pos, move):
         x, y = pos 
-        candidates = []
-        if dx == 0 and dy == -1:
-            candidates = [(x, y + 1), (x + 1, y + 1)]
-        if dx == 0 and dy == 1:
-            candidates = [(x, y), (x + 1, y)]
-        if dx == -1 and dy == 0:
-            candidates = [(x + 1, y + 1), (x + 1, y)]
-        if dx == 1 and dy == 0:
-            candidates = [(x, y), (x, y + 1)]
-        
-        l = [atom for atom in self.compound if atom.pos in candidates]
+        upLeft = self.compound.get((x, y))
+        upRight = self.compound.get((x + 1, y))
+        downLeft = self.compound.get((x, y + 1))
+        downRight = self.compound.get((x + 1, y + 1))
+       
+        if move == UP:
+            return downLeft, downRight
+        elif move == DOWN:
+            return upLeft, upRight
+        elif move == LEFT:
+            return upRight, downRight
+        return upLeft, downLeft
 
-        if len(l) == 2 and l[0].connections > 0 and l[1].connections > 0:
-            self.doubleConnect(l[1], l[0])
-
+    def addConnection(self, atom1, atom2):
+        if atom1.connections > 0 and atom2.connections > 0:
+            atom1.connections -= 1
+            atom1.updateImage()
+            atom2.connections -= 1
+            atom2.updateImage()
+    
     def removeConnection(self, pos, dx, dy):
         x, y = pos 
         candidates = []
@@ -116,33 +129,44 @@ class Board:
 
         if len(l) == 2:
             self.rotateAtom(l[1], l[0], dx, dy)
-        
-    def doubleConnect(self, atom, atom2):
-        atom.connections -= 1
-        atom2.connections -= 1
+      
         
     def pushAtoms(self, atoms, dx, dy):
         for atom in atoms:
             atom.move(dx, dy)
                 
-    def moveCompound(self, dx, dy):
-        for atom in self.compound:
-            atom.move(dx, dy)
+    def moveCompound(self, move):
+        dx, dy = move
+        updated_compound = {}  
+        for pos, atom in self.compound.items():
+            x, y = pos
+            updated_pos = (x + dx, y + dy) 
+            updated_compound[updated_pos] = atom  
+        self.compound = updated_compound  
         self.connectAtoms()
             
     def connectAtom(self, connection):
-        atom1, atom2 = connection
+        atom1, (pos2, atom2) = connection
         atom1.connections -= 1
+        atom1.updateImage()
         atom2.connections -= 1
-        self.compound.append(atom2)
-        self.atoms.remove(atom2)
-    
+        atom2.updateImage()
+        self.compound[pos2] = atom2
+        self.atoms.pop(pos2)
+
+    def isNextTo(self, pos1, pos2):
+        x1, y1 = pos1
+        x2, y2 = pos2
+        if (x1 == x2 and abs(y1 - y2) == 1): return True
+        if (y1 == y2 and abs(x1 - x2) == 1): return True
+        return False
+
     def connectAtoms(self):
         connections = []
-        for atom in self.compound:
-            for single in self.atoms:
-                if atom.canConnectTo(single):
-                    connections.append((atom, single))
+        for pos1, atom1 in self.compound.items():
+            for pos2, atom2 in self.atoms.items():
+                if self.isNextTo(pos1, pos2) and atom1.canConnectTo(atom2):
+                    connections.append((atom1, (pos2, atom2)))
        
         for connection in connections:
             self.connectAtom(connection)
@@ -193,6 +217,9 @@ class Board:
       
     def draw(self, surface):
         self.drawBoard(surface)
+
+        for pos, circle in self.circles.items():
+            circle.draw(surface, self.width, self.height, pos)
 
         for pos, atom in self.atoms.items():
             atom.draw(surface, self.width, self.height, pos)

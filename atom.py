@@ -14,12 +14,21 @@ class Atom:
         self.name, self.limitBound, = atom
         self.isHero = isHero  
         self.connections = self.limitBound
+        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
+        self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
+        
 
     def draw(self, surface, offX, offY, pos):
-        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
-        image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         x, y = pos
-        surface.blit(image, ((WIDTH - offX * SQUARE) // 2 + x*SQUARE, ((HEIGHT - offY * SQUARE) // 2 + y*SQUARE)))
+        surface.blit(self.image, ((WIDTH - offX * SQUARE) // 2 + x*SQUARE, ((HEIGHT - offY * SQUARE) // 2 + y*SQUARE)))
     
-    def isConnectable(self):
+    def canAddConnection(self):
         return self.connections < self.boundLimit
+    
+    def canConnectTo(self, atom):
+        return self.connections > 0 and atom.connections > 0
+
+    def updateImage(self):
+        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
+        self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
+        

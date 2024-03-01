@@ -79,15 +79,14 @@ class Game:
                         break
                     elif event.key == pygame.K_r:
                         self.resetGame()
-                        
                     elif event.key == pygame.K_UP :
-                        self.board.handleMove(0, -1)
+                        self.board.handleMove(UP)
                     elif event.key == pygame.K_DOWN:
-                        self.board.handleMove(0, 1)
+                        self.board.handleMove(DOWN)
                     elif event.key == pygame.K_LEFT:
-                        self.board.handleMove(-1, 0)
+                        self.board.handleMove(LEFT)
                     elif event.key == pygame.K_RIGHT:
-                        self.board.handleMove(1, 0)
+                        self.board.handleMove(RIGHT)
 
             # Draw game objects
             self.board.draw(self.screen)
@@ -121,9 +120,10 @@ class Game:
         sys.exit()
 
 
-#game = Game()
-#game.play()
+game = Game()
+game.play()
 
+'''
 import time
 
 def if_elifs(value):
@@ -171,6 +171,4 @@ match_case_time = end_time - start_time
 
 print("Time taken for if-elifs:", if_elifs_time)
 print("Time taken for match-case:", match_case_time)
-
-game = Game()
-game.play()
+'''
