@@ -2,8 +2,6 @@ import pygame
 from atom import *
 from circle import *
 
-
-
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

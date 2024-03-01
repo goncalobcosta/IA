@@ -55,7 +55,7 @@ class Atom:
         return False
     
     def canConnectTo(self, atom):
-        return self.isNextTo(atom) and len(self.connections) < self.boundLimit  and len(atom.connections) < atom.boundLimit
+        return self.isNextTo(atom) and len(self.connections) < self.boundLimit and len(atom.connections) < atom.boundLimit
         
     def drawConnection(self, surface, offX, offY, atom, doubleConnection):
         direction = (atom.pos[0] - self.pos[0], atom.pos[1] - self.pos[1])

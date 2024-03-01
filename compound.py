@@ -51,7 +51,7 @@ class Compound:
             atom.move(move)
           
     def addConnection(self, atom1, atom2):
-        if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom1.boundLimit:
+        if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom2.boundLimit:
             atom1.connect(atom2)
             atom2.connect(atom1)      
             
