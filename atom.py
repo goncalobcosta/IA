@@ -28,20 +28,21 @@ class Atom:
         path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         
-    def addConnection(self, atom):
+    def connect(self, atom):
         self.connections.append(atom)
+        self.updateImage()
     
     def isInPosition(self, pos):
         return self.pos == pos
     
-    
-    
-    
-    
-    
-    
-    def canAddConnection(self):
-        return self.connections < self.boundLimit
+    def isNextTo(self, atom):
+        x1, y1 = self.pos
+        x2, y2 = atom.pos
+        if (x1 == x2 and abs(y1 - y2) == 1): return True
+        if (y1 == y2 and abs(x1 - x2) == 1): return True
+        return False
     
     def canConnectTo(self, atom):
-        return self.connections > 0 and atom.connections > 0
+        return self.isNextTo(atom) and len(self.connections) < self.boundLimit  and len(atom.connections) < atom.boundLimit
+        
+    
