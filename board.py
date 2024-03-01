@@ -22,12 +22,11 @@ GREEN = (175, 219, 140)
 BACKGROUND = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, walls, blank, atoms, compound, circles, wallColor):
+    def __init__(self, width, height, walls, blank, compound, circles, wallColor):
         self.width = width
         self.height = height
         self.walls = walls
         self.blank = blank
-        self.atoms = atoms
         self.compound = compound 
         self.circles = circles
         self.wallColor = wallColor
@@ -213,8 +212,4 @@ class Board:
         for pos, circle in self.circles.items():
             circle.draw(surface, self.width, self.height, pos)
 
-        for pos, atom in self.atoms.items():
-            atom.draw(surface, self.width, self.height, pos)
-
-        for pos, atom in self.compound.items():
-            atom.draw(surface, self.width, self.height, pos)
+        self.compound.draw(surface, self.width, self.height)
