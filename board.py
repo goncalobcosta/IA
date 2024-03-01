@@ -73,16 +73,14 @@ class Board:
     def handleCircles(self, move):
         for pos, circle in self.circles.items():
             atom1, atom2 = self.getCandidates(pos, move)
-            if (atom1 is not None and atom2 is not None):
+            if (atom1[1] is not None and atom2[1] is not None):
                 if (circle.name == "green"):
-                    print("handling green dots")
                     self.addConnection(atom1, atom2)
-                '''
                 elif (circle.name == "red"):
-                    self.removeConnection(circle.pos, dx, dy)
+                    print("i should handle red dots")
+                    self.removeConnection(atom1, atom2)
                 elif (circle.name == "blue"):
-                    self.rotateCompound(circle.pos, dx, dy)
-           '''
+                    return           
     
     def getCandidates(self, pos, move):
         x, y = pos 
@@ -92,37 +90,37 @@ class Board:
         downRight = self.compound.get((x + 1, y + 1))
        
         if move == UP:
-            return downLeft, downRight
+            return ((x, y + 1), downLeft), ((x + 1, y + 1), downRight)
         elif move == DOWN:
-            return upLeft, upRight
+            return ((x, y), upLeft), ((x + 1, y), upRight)
         elif move == LEFT:
-            return upRight, downRight
-        return upLeft, downLeft
+            return ((x + 1, y), upRight), ((x + 1, y + 1), downRight)
+        return ((x, y), upLeft), ((x, y + 1), downLeft)
 
     def addConnection(self, atom1, atom2):
-        if atom1.connections > 0 and atom2.connections > 0:
-            atom1.connections -= 1
-            atom1.updateImage()
-            atom2.connections -= 1
-            atom2.updateImage()
+        if atom1[1].connections > 0 and atom2[1].connections > 0:
+            atom1[1].connections -= 1
+            atom1[1].updateImage()
+            atom2[1].connections -= 1
+            atom2[1].updateImage()
         
-    def removeConnection(self, pos, dx, dy):
-        x, y = pos 
-        candidates = []
-        if dx == 0 and dy == -1:
-            candidates = [(x, y + 1), (x + 1, y + 1)]
-        if dx == 0 and dy == 1:
-            candidates = [(x, y), (x + 1, y)]
-        if dx == -1 and dy == 0:
-            candidates = [(x + 1, y + 1), (x + 1, y)]
-        if dx == 1 and dy == 0:
-            candidates = [(x, y), (x, y + 1)]
-        
-        l = [atom for atom in self.compound if atom.pos in candidates]
+    def removeConnection(self, atom1, atom2):
+        if atom1[1].canAddConnection() and atom2[1].canAddConnection():
+            if atom1[1].connections == 0 and not atom1[1].isHero:
+                self.compound.pop(atom1[0])
+                self.atoms[atom1[0]] = atom1[1]
+            elif atom2[1].connections == 0 and not atom2[1].isHero:
+                self.compound.pop(atom2[0])
+                self.atoms[atom2[0]] = atom2[1]
+            elif atom1[1].connections == 0 and atom1[1].isHero:
+                self.compound.pop(atom2[0])
+                self.atoms[atom2[0]] = atom2[1]
+            atom1[1].connections += 1
+            atom2[1].connections += 1
+            atom1[1].updateImage()
+            atom2[1].updateImage()
 
-        if len(l) == 2 and l[1].notFull() and l[0].notFull():
-            self.removeAtom(l[1], l[0])
-    
+      
     def rotateCompound(self, pos, dx, dy):
         x, y = pos 
         candidates = []
@@ -175,17 +173,6 @@ class Board:
        
         for connection in connections:
             self.connectAtom(connection)
-
-    def removeAtom(self, atom1, atom2):
-
-        if (atom1.connections == 0): 
-            self.atoms.append(atom1)
-            self.compound.remove(atom1)
-        if (atom2.connections == 0): 
-            self.atoms.append(atom2)
-            self.compound.remove(atom2)
-        atom1.connections += 1
-        atom2.connections += 1
     
     def rotateAtom(self, atom1, atom2, dx, dy):
         (x1, y1) = atom1.pos

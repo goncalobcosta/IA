@@ -11,9 +11,9 @@ SQUARE = 50
 
 class Atom:
     def __init__(self, atom, isHero = False):
-        self.name, self.limitBound, = atom
+        self.name, self.boundLimit, = atom
         self.isHero = isHero  
-        self.connections = self.limitBound
+        self.connections = self.boundLimit
         path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.connections) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         
