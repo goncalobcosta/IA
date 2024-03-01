@@ -23,10 +23,17 @@ class Compound:
         for atom in self.atoms:
             atom.pos = (atom.pos[0] + move[0], atom.pos[1] + move[1])
             
+    def connect(self, compound, src, dest):
+        src.connect(dest)
+        dest.connect(src) 
+        self.atoms += compound.atoms       
+        
     def handleConnection(self, compound):
         for atom in self.atoms:
             for atom2 in compound.atoms:
                 if atom.canConnectTo(atom2): 
-                    print("i can connection these atoms")
-                    atom.connect(atom2)
-                    atom2.connect(atom)
+                   return (self, compound, atom, atom2) 
+        
+    def push(self, move):
+        for atom in self.atoms:
+            atom.move(move)

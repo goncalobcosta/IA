@@ -32,6 +32,9 @@ class Atom:
         self.connections.append(atom)
         self.updateImage()
     
+    def move(self, move):
+        self.pos = (self.pos[0] + move[0], self.pos[1] + move[1])
+    
     def isInPosition(self, pos):
         return self.pos == pos
     

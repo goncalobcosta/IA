@@ -69,21 +69,32 @@ class Board:
         if not self.canMove(move):
             return 
         print("I can move!")
-
+        self.handlePushes(move)
         self.hero.move(move)
         self.connectCompounds()
         
-        '''self.handleCircles(move)
-        self.handlePushes(move)
-        self.moveCompound(move)'''
+        #self.handleCircles(move)
         
+    
+    def handlePushes(self, move):
+        for atom in self.hero.atoms:
+            pos = atom.pos
+            nextPos = (pos[0] + move[0], pos[1] + move[1])
+          
+            for compound in self.compounds:
+                if compound.isInPosition(nextPos) and self.canPushCompound(compound, move):
+                    compound.push(move)
+        
+    
     def connectCompounds(self):
         allCompounds = [self.hero] + self.compounds
         for i in range(len(allCompounds)-1):
             for j in range(i+1, len(allCompounds)):
-                print("i am checking connections")
-                allCompounds[i].handleConnection(allCompounds[j])
-
+                res = allCompounds[i].handleConnection(allCompounds[j])
+                if res is not None: 
+                    res[0].connect(res[1], res[2], res[3])
+                    self.compounds.remove(res[1])
+        
     def drawBoard(self, surface):
         for y in range(self.height):
             for x in range(self.width):
@@ -102,3 +113,4 @@ class Board:
             compound.draw(surface, self.width, self.height)
         
         self.hero.draw(surface, self.width, self.height)
+        
