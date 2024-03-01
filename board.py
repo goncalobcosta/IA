@@ -36,6 +36,7 @@ class Board:
                 return False
             
             for other in self.compounds:
+                if(other == compound): continue
                 if other.isInPosition(nextPos) and ((len(compound.atoms) < len(other.atoms)) or not self.canMove(move, other)):
                     print("There is a compound that i cant push anymore")
                     return False
