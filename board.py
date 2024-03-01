@@ -92,9 +92,11 @@ class Board:
         for i in range(len(allCompounds)-1):
             for j in range(i+1, len(allCompounds)):
                 res = allCompounds[i].handleConnection(allCompounds[j])
-                if res is not None: 
-                    res[0].connect(res[1], res[2], res[3])
-                    self.compounds.remove(res[1])
+                if res != []:
+                    for tup in res:
+                        tup[0].connect(tup[1], tup[2], tup[3])
+                    res[0][0].atoms += res[0][1].atoms
+                    self.compounds.remove(res[0][1])       
         
     
     def connectCompounds(self):
@@ -102,9 +104,11 @@ class Board:
         for i in range(len(allCompounds)-1):
             for j in range(i+1, len(allCompounds)):
                 res = allCompounds[i].handleConnection(allCompounds[j])
-                if res is not None: 
-                    res[0].connect(res[1], res[2], res[3])
-                    self.compounds.remove(res[1])
+                if res != []: 
+                    for tup in res:
+                        tup[0].connect(tup[1], tup[2], tup[3])
+                    res[0][0].atoms += res[0][1].atoms
+                    self.compounds.remove(res[0][1])
         
     def drawBoard(self, surface):
         for y in range(self.height):
@@ -125,4 +129,17 @@ class Board:
         for compound in self.compounds:
             compound.draw(surface, self.width, self.height)
         
-        
+    def printStat(self):
+        print("My hero is")
+        for atom in self.hero.atoms:
+            x = []
+            for con in atom.connections:
+                x.append(con.pos)
+            print(atom.pos, x)
+        print("=========")
+        for i in self.compounds:
+            l = []
+            for a in i.atoms:
+                l += [a.pos]
+            print(l)
+        print("=========")

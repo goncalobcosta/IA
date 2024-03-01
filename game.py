@@ -65,7 +65,7 @@ class Game:
     
     def playGame(self):
         
-        self.board = Level(3).getLevelBoard()
+        self.board = Level(4).getLevelBoard()
         while (True):
             self.screen.fill(WHITE)
             for event in pygame.event.get():                
@@ -89,6 +89,8 @@ class Game:
                         self.board.handleMove(LEFT)
                     elif event.key == pygame.K_RIGHT:
                         self.board.handleMove(RIGHT)
+                    elif event.key == pygame.K_e:
+                        self.board.printStat()
 
             # Draw game objects
             self.board.draw(self.screen)

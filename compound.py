@@ -8,9 +8,9 @@ class Compound:
     def dfsDraw(self, surface, offX, offY, atom):
         atom.visited = True
         for neighbour in atom.connections:
+            isDoubleConnection = atom.connections.count(neighbour) == 2
+            atom.drawConnection(surface, offX, offY, neighbour, isDoubleConnection)
             if not neighbour.visited:
-                isDoubleConnection = atom.connections.count(neighbour) == 2
-                atom.drawConnection(surface, offX, offY, neighbour, isDoubleConnection)
                 self.dfsDraw(surface, offX, offY, neighbour)
         
     def draw(self, surface, offX, offY):
@@ -34,13 +34,15 @@ class Compound:
     def connect(self, compound, src, dest):
         src.connect(dest)
         dest.connect(src) 
-        self.atoms += compound.atoms       
         
     def handleConnection(self, compound):
+        res = []
         for atom in self.atoms:
             for atom2 in compound.atoms:
                 if atom.canConnectTo(atom2): 
-                   return (self, compound, atom, atom2) 
+                   res.append((self, compound, atom, atom2))
+                   print("Deviamos ligar", atom.pos, atom2.pos)
+        return res
         
     def push(self, move):
         for atom in self.atoms:
