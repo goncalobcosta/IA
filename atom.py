@@ -57,14 +57,27 @@ class Atom:
     def canConnectTo(self, atom):
         return self.isNextTo(atom) and len(self.connections) < self.boundLimit  and len(atom.connections) < atom.boundLimit
         
-    def drawConnection(self, surface, offX, offY, atom):
+    def drawConnection(self, surface, offX, offY, atom, doubleConnection):
         direction = (atom.pos[0] - self.pos[0], atom.pos[1] - self.pos[1])
-        print(direction)
-        if direction == UP:
-            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 5, 50))
-        elif direction == DOWN:
-            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 5, 50))
-        elif direction == LEFT:
-            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 25, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 50, 5))
-        elif direction == RIGHT:
-            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 25, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))
+        if (doubleConnection):
+            if direction == UP:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 17, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 5, 50))
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 27, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 5, 50))
+            elif direction == DOWN:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 17, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 5, 50))
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 27, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 5, 50))
+            elif direction == LEFT:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 17), 50, 5))
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 27), 50, 5))
+            elif direction == RIGHT:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 17), 50, 5))
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 27), 50, 5))
+        else:
+            if direction == UP:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 5, 50))
+            elif direction == DOWN:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 5, 50))
+            elif direction == LEFT:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 50, 5))
+            elif direction == RIGHT:
+                pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))

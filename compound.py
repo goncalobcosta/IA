@@ -9,16 +9,14 @@ class Compound:
         atom.visited = True
         for neighbour in atom.connections:
             if not neighbour.visited:
-                atom.drawConnection(surface, offX, offY, neighbour)
+                isDoubleConnection = atom.connections.count(neighbour) == 2
+                atom.drawConnection(surface, offX, offY, neighbour, isDoubleConnection)
                 self.dfsDraw(surface, offX, offY, neighbour)
         
     def draw(self, surface, offX, offY):
-        
         for atom in self.atoms:
             atom.visited = False
-        
         self.dfsDraw(surface, offX, offY, self.atoms[0])
-        
         for atom in self.atoms:
             atom.draw(surface, offX, offY)
 
@@ -51,3 +49,23 @@ class Compound:
     def push(self, move):
         for atom in self.atoms:
             atom.move(move)
+          
+    def addConnection(self, atom1, atom2):
+        if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom1.boundLimit:
+            atom1.connect(atom2)
+            atom2.connect(atom1)      
+            
+    def getCandidates(self, move, pos):
+        x, y = pos 
+        upLeft = [atom for atom in self.atoms if atom.pos == (x, y)]
+        upRight = [atom for atom in self.atoms if atom.pos == (x+1, y)]
+        downLeft = [atom for atom in self.atoms if atom.pos == (x, y+1)]
+        downRight = [atom for atom in self.atoms if atom.pos == (x+1, y+1)]
+       
+        if move == UP:
+            return downLeft, downRight
+        elif move == DOWN:
+            return upLeft, upRight
+        elif move == LEFT:
+            return upRight, downRight
+        return upLeft, downLeft

@@ -1,4 +1,5 @@
 import pygame
+from atom import *
 
 BREAK = "red"
 ADD = "green"

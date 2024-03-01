@@ -12,10 +12,9 @@ class Level:
             h2 = Atom(H, (5, 2))
             h3 = Atom(H, (2, 6))
             h4 = Atom(H, (6, 6))
+            c = Atom(C, (4, 5), True)
             
-            carbon = Atom(C, (4, 5), True)
-            
-            hero = Compound([carbon], True)
+            hero = Compound([c], True)
             compounds = [Compound([h1]), Compound([h2]), Compound([h3]), Compound([h4])]
 
             walls = {
@@ -38,37 +37,30 @@ class Level:
             return Board(9, 8, walls, blank, hero, compounds, {}, wallColor)
         
         elif (self.level == 1):
-
-            atoms = {
-                (5, 1) : Atom(H), 
-                (5, 4) : Atom(H), 
-                (2, 1) : Atom(N), 
-            }
-
-            compound = {
-                (2, 4) : Atom(N, True)
-            }
+            
+            o1 = Atom(O, (1, 1))
+            o2 = Atom(O, (4, 4))
+            c = Atom(C, (1, 4), True)
+            
+            hero = Compound([c], True)
+            compounds = [Compound([o1]), Compound([o2])]
 
             walls = {
-                (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0),
-                (0, 1), (1, 1), (6, 1), (7, 1), 
-                (0, 2), (7, 2),
-                (0, 3), (7, 3),
-                (0, 4), (1, 4), (6, 4), (7, 4), 
-                (1, 5), (2, 5), (3, 5), (4, 5), (5, 5), (6, 5)
-            }
-            
-            blank = {
-                (0, 0), (7, 0), (0, 5), (7, 5)
+                (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0),
+                (0, 1), (5, 1), 
+                (0, 2), (5, 2),
+                (0, 3), (5, 3),
+                (0, 4), (5, 4),
+                (0, 5), (1, 5), (2, 5), (3, 5), (4, 5), (5, 5),
             }
 
             circles = {
-                (1, 2) : Circle(ROTATE),
-                (4, 2) : Circle(ADD)
+                (2, 2) : Circle(ADD)
             }
 
             wallColor = (94, 197, 228)
-            return Board(8, 6, walls, blank, atoms, compound, circles, wallColor)
+            
+            return Board(6, 6, walls, {}, hero, compounds, circles, wallColor)
        
         elif (self.level == 2):
             atoms = { 

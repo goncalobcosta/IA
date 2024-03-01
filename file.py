@@ -28,19 +28,7 @@ def handlePushes(self, move):
                     return           
     
     def getCandidates(self, pos, move):
-        x, y = pos 
-        upLeft = self.compound.get((x, y))
-        upRight = self.compound.get((x + 1, y))
-        downLeft = self.compound.get((x, y + 1))
-        downRight = self.compound.get((x + 1, y + 1))
-       
-        if move == UP:
-            return ((x, y + 1), downLeft), ((x + 1, y + 1), downRight)
-        elif move == DOWN:
-            return ((x, y), upLeft), ((x + 1, y), upRight)
-        elif move == LEFT:
-            return ((x + 1, y), upRight), ((x + 1, y + 1), downRight)
-        return ((x, y), upLeft), ((x, y + 1), downLeft)
+        
 
     def addConnection(self, atom1, atom2):
         if atom1[1].connections > 0 and atom2[1].connections > 0:
