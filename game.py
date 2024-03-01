@@ -119,7 +119,6 @@ class Game:
         pygame.quit()
         sys.exit()
 
-
 game = Game()
 game.play()
 

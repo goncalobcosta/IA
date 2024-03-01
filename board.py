@@ -35,17 +35,15 @@ class Board:
     def inBoard(self, pos):
         return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
     
-    def canPush(self, x, y, dx, dy):
-        return self.grid[y+2*dy][x+2*dx] == None
-    
-
     def canMove(self, move):
         for pos in self.compound.keys():
             nextPos = (pos[0] + move[0], pos[1] + move[1])
             if not self.inBoard(nextPos):
                 return False
-            if self.atoms.get(nextPos) is not None:
-                return False
+            while self.atoms.get(nextPos) is not None:
+                nextPos = (nextPos[0] + move[0], nextPos[1] + move[1])
+                if not self.inBoard(nextPos):
+                    return False
         return True
     
     def handleMove(self, move):
@@ -56,11 +54,22 @@ class Board:
         self.moveCompound(move)
         
     def handlePushes(self, move):
+        atomsToPush = {}
         for pos in self.compound.keys():
             nextPos = (pos[0] + move[0], pos[1] + move[1])
-            if self.atoms.get(nextPos) is not None:
-                print(self.atoms[nextPos])
-
+            while self.atoms.get(nextPos) is not None:
+                atom = self.atoms.get(nextPos)
+                nextPos = (nextPos[0] + move[0], nextPos[1] + move[1])
+                atomsToPush[nextPos] = atom
+        self.pushAtoms(atomsToPush)
+    
+    def pushAtoms(self, updated):
+        
+        for (pos, atom) in self.atoms.items():
+            if atom not in updated.values():
+                updated[pos] = atom
+        self.atoms = updated
+        
     def handleCircles(self, move):
         for pos, circle in self.circles.items():
             atom1, atom2 = self.getCandidates(pos, move)
@@ -129,11 +138,6 @@ class Board:
 
         if len(l) == 2:
             self.rotateAtom(l[1], l[0], dx, dy)
-      
-        
-    def pushAtoms(self, atoms, dx, dy):
-        for atom in atoms:
-            atom.move(dx, dy)
                 
     def moveCompound(self, move):
         dx, dy = move
