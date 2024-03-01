@@ -75,6 +75,7 @@ class Board:
             atom1, atom2 = self.getCandidates(pos, move)
             if (atom1 is not None and atom2 is not None):
                 if (circle.name == "green"):
+                    print("handling green dots")
                     self.addConnection(atom1, atom2)
                 '''
                 elif (circle.name == "red"):
@@ -104,7 +105,7 @@ class Board:
             atom1.updateImage()
             atom2.connections -= 1
             atom2.updateImage()
-    
+        
     def removeConnection(self, pos, dx, dy):
         x, y = pos 
         candidates = []

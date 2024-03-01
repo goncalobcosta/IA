@@ -2,6 +2,7 @@ import pygame
 import sys
 from level import * 
 
+QUIT = 3
 
 class Game:
     def __init__(self):
@@ -15,7 +16,7 @@ class Game:
         
     def play(self):
         self.displayMenu()
-        self.playGame()
+        if (self.option != QUIT): self.playGame()
     
     def drawMenu(self):
         self.screen.fill(WHITE)
@@ -63,6 +64,7 @@ class Game:
             self.clock.tick(60)
     
     def playGame(self):
+        
         self.board = Level(self.option).getLevelBoard()
         while (True):
             self.screen.fill(WHITE)
