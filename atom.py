@@ -1,6 +1,6 @@
 import pygame
 
-
+He = ("helium", 0)
 H = ("hydrogen", 1)
 O = ("oxygen", 2)
 N = ("nitrogen", 3)
