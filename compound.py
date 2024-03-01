@@ -19,11 +19,7 @@ class Compound:
         self.dfsDraw(surface, offX, offY, self.atoms[0])
         for atom in self.atoms:
             atom.draw(surface, offX, offY)
-
-           
-    def addConnection(self, src, dest):
-        src.addConnection(dest)
-        dest.addConnection(src)
+    
      
     def addAtom(self, atom):
         self.atoms.append(atom)
@@ -53,7 +49,12 @@ class Compound:
     def addConnection(self, atom1, atom2):
         if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom2.boundLimit:
             atom1.connect(atom2)
-            atom2.connect(atom1)      
+            atom2.connect(atom1)  
+    
+    def removeConnection(self, atom1, atom2):
+        if atom1 in atom2.connections:
+            atom1.disconnect(atom2)
+            atom2.disconnect(atom1)   
             
     def getCandidates(self, move, pos):
         x, y = pos 
@@ -69,3 +70,20 @@ class Compound:
         elif move == LEFT:
             return upRight, downRight
         return upLeft, downLeft
+    
+    def dfs(self, atom):
+        atom.visited = True
+        for neighbour in atom.connections:
+            if not neighbour.visited:
+                self.dfs(neighbour)
+    
+    def checkIsolation(self):
+        for atom in self.atoms:
+            atom.visited = False
+                    
+        self.dfs(self.atoms[0])
+        
+        isolated = [atom for atom in self.atoms if not atom.visited]
+        self.atoms = [atom for atom in self.atoms if atom.visited]
+        
+        return isolated

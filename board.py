@@ -1,5 +1,5 @@
 import pygame
-from atom import *
+from compound import *
 from circle import *
 
 # Colors
@@ -66,16 +66,23 @@ class Board:
         self.connectCompounds()
         
     def handleCircles(self, move):
+        allCompounds = [self.hero] + self.compounds
         for pos, circle in self.circles.items():
-            atom1, atom2 = self.hero.getCandidates(move, pos)
-            if (atom1 != [] and atom2 != []):
-                if (circle.name == "green"):
-                    self.hero.addConnection(atom1[0], atom2[0])
-                elif (circle.name == "red"):
-                    print("I should make a cut!")
-                    #self.removeConnection(atom1, atom2)
-                elif (circle.name == "blue"):
-                    return           
+            for compound in allCompounds:
+                atom1, atom2 = compound.getCandidates(move, pos)
+                if (atom1 != [] and atom2 != []):
+                    if (circle.name == "green"):
+                        compound.addConnection(atom1[0], atom2[0])
+                    elif (circle.name == "red"):
+                        compound.removeConnection(atom1[0], atom2[0])
+                        isolatedCompound = compound.checkIsolation()
+                        if isolatedCompound != []:
+                            print("THERE IS A NEW COMPOUND!")
+                            newCompound = Compound(isolatedCompound)
+                            self.compounds.append(newCompound)
+                            
+                    elif (circle.name == "blue"):
+                        return           
     
     def handlePushes(self, move):
         for atom in self.hero.atoms:
