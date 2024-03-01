@@ -15,7 +15,8 @@ class Level:
             
             carbon = Atom(C, (4, 5), True)
             
-            compound = Compound([carbon, h1, h2, h3, h4], carbon)
+            hero = Compound([carbon], True)
+            compounds = [Compound([h1]), Compound([h2]), Compound([h3]), Compound([h4])]
 
             walls = {
                 (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
@@ -34,7 +35,7 @@ class Level:
 
             wallColor = (239, 175, 26)
 
-            return Board(9, 8, walls, blank, compound, {}, wallColor)
+            return Board(9, 8, walls, blank, hero, compounds, {}, wallColor)
         
         elif (self.level == 1):
 

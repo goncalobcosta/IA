@@ -1,4 +1,3 @@
-from connection import * 
 import pygame
 
 
@@ -17,6 +16,7 @@ class Atom:
         self.pos = pos
         self.connections = []
         self.isHero = isHero  
+        self.visited = False
         path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
 
@@ -29,14 +29,10 @@ class Atom:
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         
     def addConnection(self, atom):
-        connection = Connection(self, atom)
-        self.connections.append(connection)
+        self.connections.append(atom)
     
-    
-    
-
-    
-    
+    def isInPosition(self, pos):
+        return self.pos == pos
     
     
     

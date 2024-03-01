@@ -22,12 +22,13 @@ GREEN = (175, 219, 140)
 BACKGROUND = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, walls, blank, compound, circles, wallColor):
+    def __init__(self, width, height, walls, blank, hero, compounds, circles, wallColor):
         self.width = width
         self.height = height
         self.walls = walls
         self.blank = blank
-        self.compound = compound 
+        self.hero = hero
+        self.compounds = compounds
         self.circles = circles
         self.wallColor = wallColor
         
@@ -35,22 +36,35 @@ class Board:
         return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
     
     def canMove(self, move):
-        for pos in self.compound.keys():
+        for atom in self.hero.atoms:
+            pos = atom.pos
             nextPos = (pos[0] + move[0], pos[1] + move[1])
             if not self.inBoard(nextPos):
                 return False
+            
+            for compound in self.compounds:
+                if compound.isInPosition(nextPos):
+                    print("I should push this compound maybe!")
+          
+            '''
             while self.atoms.get(nextPos) is not None:
                 nextPos = (nextPos[0] + move[0], nextPos[1] + move[1])
                 if not self.inBoard(nextPos):
                     return False
+            '''
         return True
     
     def handleMove(self, move):
         if not self.canMove(move):
             return 
-        self.handleCircles(move)
+        print("I can move!")
+
+        self.hero.move(move)
+        
+        
+        '''self.handleCircles(move)
         self.handlePushes(move)
-        self.moveCompound(move)
+        self.moveCompound(move)'''
         
     def handlePushes(self, move):
         atomsToPush = {}
@@ -136,16 +150,7 @@ class Board:
 
         if len(l) == 2:
             self.rotateAtom(l[1], l[0], dx, dy)
-                
-    def moveCompound(self, move):
-        dx, dy = move
-        updated_compound = {}  
-        for pos, atom in self.compound.items():
-            x, y = pos
-            updated_pos = (x + dx, y + dy) 
-            updated_compound[updated_pos] = atom  
-        self.compound = updated_compound  
-        self.connectAtoms()
+            
             
     def connectAtom(self, connection):
         atom1, (pos2, atom2) = connection
@@ -212,4 +217,7 @@ class Board:
         for pos, circle in self.circles.items():
             circle.draw(surface, self.width, self.height, pos)
 
-        self.compound.draw(surface, self.width, self.height)
+        for compound in self.compounds:
+            compound.draw(surface, self.width, self.height)
+        
+        self.hero.draw(surface, self.width, self.height)

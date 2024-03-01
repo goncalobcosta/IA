@@ -1,9 +1,9 @@
 from atom import *
 
 class Compound:
-    def __init__(self, atoms, hero):
+    def __init__(self, atoms, isHeroCompound = False):
         self.atoms = atoms
-        self.hero = hero
+        self.isHeroCompound = isHeroCompound
         
     def draw(self, surface, offX, offY):
         for atom in self.atoms:
@@ -15,3 +15,10 @@ class Compound:
      
     def addAtom(self, atom):
         self.atoms.append(atom)
+        
+    def isInPosition(self, pos):
+        return any(atom.isInPosition(pos) for atom in self.atoms)
+        
+    def move(self, move):
+        for atom in self.atoms:
+            atom.pos = (atom.pos[0] + move[0], atom.pos[1] + move[1])
