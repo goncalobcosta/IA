@@ -5,9 +5,23 @@ class Compound:
         self.atoms = atoms
         self.isHeroCompound = isHeroCompound
         
+    def dfsDraw(self, surface, offX, offY, atom):
+        atom.visited = True
+        for neighbour in atom.connections:
+            if not neighbour.visited:
+                atom.drawConnection(surface, offX, offY, neighbour)
+                self.dfsDraw(surface, offX, offY, neighbour)
+        
     def draw(self, surface, offX, offY):
+        
+        for atom in self.atoms:
+            atom.visited = False
+        
+        self.dfsDraw(surface, offX, offY, self.atoms[0])
+        
         for atom in self.atoms:
             atom.draw(surface, offX, offY)
+
            
     def addConnection(self, src, dest):
         src.addConnection(dest)

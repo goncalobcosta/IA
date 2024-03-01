@@ -10,6 +10,15 @@ WIDTH = 800
 HEIGHT = 600
 SQUARE = 50
 
+# DIRECTIONS
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+
+DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
+
+
 class Atom:
     def __init__(self, atom, pos, isHero = False):
         self.name, self.boundLimit, = atom
@@ -48,4 +57,14 @@ class Atom:
     def canConnectTo(self, atom):
         return self.isNextTo(atom) and len(self.connections) < self.boundLimit  and len(atom.connections) < atom.boundLimit
         
-    
+    def drawConnection(self, surface, offX, offY, atom):
+        direction = (atom.pos[0] - self.pos[0], atom.pos[1] - self.pos[1])
+        print(direction)
+        if direction == UP:
+            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 5, 50))
+        elif direction == DOWN:
+            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 5, 50))
+        elif direction == LEFT:
+            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 25, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 50, 5))
+        elif direction == RIGHT:
+            pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 25, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))

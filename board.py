@@ -2,13 +2,7 @@ import pygame
 from atom import *
 from circle import *
 
-# DIRECTIONS
-UP = (0, -1)
-DOWN = (0, 1)
-LEFT = (-1, 0)
-RIGHT = (1, 0)
 
-DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
 # Colors
 WHITE = (255, 255, 255)
@@ -109,8 +103,9 @@ class Board:
         for pos, circle in self.circles.items():
             circle.draw(surface, self.width, self.height, pos)
 
+        self.hero.draw(surface, self.width, self.height)
+
         for compound in self.compounds:
             compound.draw(surface, self.width, self.height)
         
-        self.hero.draw(surface, self.width, self.height)
         
