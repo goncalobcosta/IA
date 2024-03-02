@@ -168,4 +168,46 @@ class Level:
             wallColor = (94, 197, 228)
 
             return Board(6, 6, walls, {}, hero, compounds, circles, wallColor)
+        
+        elif (self.level == 5):
+
+            o1 = Atom(O, (1, 5))
+            o2 = Atom(O, (1, 1))
+            o3 = Atom(O, (5, 1))
+            o4 = Atom(O, (5, 5), True)
+
+            hero = Compound([o4], True)
+            compounds = [Compound([o1]), Compound([o2]), Compound([o3])]
+            walls = {
+                (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0),
+                (0, 1), (6, 1), 
+                (0, 2), (6, 2),
+                (0, 3), (6, 3),
+                (0, 4), (6, 4),
+                (0, 5), (6, 5),
+                (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6)
+              }
+
+            circles = {
+                (1, 1) : Circle(ROTATE),
+                (2, 1) : Circle(ROTATE),
+                (3, 1) : Circle(ROTATE),
+                (1, 2) : Circle(ROTATE),
+                (2, 2) : Circle(ROTATE),
+                (3, 2) : Circle(ROTATE),
+                (1, 3) : Circle(ROTATE),
+                (2, 3) : Circle(ROTATE),
+                (3, 3) : Circle(ROTATE),
+                (4, 1) : Circle(ROTATE),
+                (4, 2) : Circle(ROTATE),
+                (4, 3) : Circle(ROTATE),
+                (4, 4) : Circle(ROTATE),
+                (1, 4) : Circle(ROTATE),
+                (2, 4) : Circle(ROTATE),
+                (3, 4) : Circle(ROTATE),
+            }
+
+            wallColor = (94, 197, 228)
+
+            return Board(7, 7, walls, {}, hero, compounds, circles, wallColor)
        

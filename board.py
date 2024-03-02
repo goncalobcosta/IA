@@ -56,6 +56,7 @@ class Board:
         self.handlePushes(move)
         self.hero.move(move)
         self.connectCompounds()
+        self.hero.checkConnections()
         
     def handleCircles(self, move):
         allCompounds = [self.hero] + self.compounds
@@ -74,8 +75,9 @@ class Board:
                             self.compounds.append(newCompound)
                             self.connectIsolatedCompounds()
 
-                    elif (circle.name == "blue"):
-                        return           
+                    elif (circle.name == "blue") :
+                        compound.rotate(move)
+                        return       
     
     def handlePushes(self, move):
         for atom in self.hero.atoms:

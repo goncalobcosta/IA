@@ -1,4 +1,5 @@
 from atom import *
+from itertools import combinations
 
 class Compound:
     def __init__(self, atoms, isHeroCompound = False):
@@ -89,3 +90,19 @@ class Compound:
         self.atoms = [atom for atom in self.atoms if atom.visited]
         
         return isolated
+    
+    def rotate(self, move):
+        for i in range(len(self.atoms) - 1, 0, -1):
+            atom = self.atoms[i]
+            if atom.isHero:
+                continue
+            else:
+                x, y = self.atoms[i-1].pos
+                dx, dy = move
+                atom.pos = (x-dx, y-dy)
+
+    def checkConnections(self):
+        for atom1, atom2 in combinations(self.atoms, 2):
+            if(atom1.canConnectTo(atom2) and (atom2 not in atom1.connections)):
+                atom1.connect(atom2)
+                atom2.connect(atom1)
