@@ -1,7 +1,9 @@
+import os
 import pygame
 import sys
-from level import * 
+from code.level import * 
 
+os.environ['SDL_AUDIODRIVER'] = 'dsp'
 QUIT = 3
 
 class Game:
@@ -9,9 +11,9 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        self.titleFont = pygame.font.Font("resources/font/Quicksand-Medium.ttf", 100) 
-        self.playFont = pygame.font.Font("resources/font/Quicksand-Regular.ttf", 30)
-        self.commandFont = pygame.font.Font("resources/font/Quicksand-Regular.ttf", 20)
+        self.titleFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 100) 
+        self.playFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 30)
+        self.commandFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 20)
         self.option = 0
         
     def play(self):
@@ -65,7 +67,7 @@ class Game:
     
     def playGame(self):
         
-        self.board = Level(4).getLevelBoard()
+        self.board = Level(4).board
         while (True):
             self.screen.fill(WHITE)
             for event in pygame.event.get():                
@@ -92,7 +94,6 @@ class Game:
                     elif event.key == pygame.K_e:
                         self.board.printStat()
 
-            # Draw game objects
             self.board.draw(self.screen)
             self.drawCommands()
             
@@ -122,56 +123,3 @@ class Game:
     def quit(self):
         pygame.quit()
         sys.exit()
-
-game = Game()
-game.play()
-
-'''
-import time
-
-def if_elifs(value):
-    if value == 1:
-        return "One"
-    elif value == 2:
-        return "Two"
-    elif value == 3:
-        return "Three"
-    elif value == 4:
-        return "Four"
-    elif value == 5:
-        return "Five"
-    else:
-        return "Other"
-
-def match_case(value):
-    match value:
-        case 1:
-            return "One"
-        case 2:
-            return "Two"
-        case 3:
-            return "Three"
-        case 4:
-            return "Four"
-        case 5:
-            return "Five"
-        case _:
-            return "Other"
-
-# Timing if-elifs
-start_time = time.time()
-for i in range(1000000):
-    result = if_elifs(i % 7)
-end_time = time.time()
-if_elifs_time = end_time - start_time
-
-# Timing match-case
-start_time = time.time()
-for i in range(1000000):
-    result = match_case(i % 7)
-end_time = time.time()
-match_case_time = end_time - start_time
-
-print("Time taken for if-elifs:", if_elifs_time)
-print("Time taken for match-case:", match_case_time)
-'''

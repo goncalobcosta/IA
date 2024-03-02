@@ -26,7 +26,7 @@ class Atom:
         self.connections = []
         self.isHero = isHero  
         self.visited = False
-        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
+        path = "resources/images/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
 
     def draw(self, surface, offX, offY):
@@ -34,7 +34,7 @@ class Atom:
         surface.blit(self.image, ((WIDTH - offX * SQUARE) // 2 + x*SQUARE, ((HEIGHT - offY * SQUARE) // 2 + y*SQUARE)))
     
     def updateImage(self):
-        path = "resources/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
+        path = "resources/images/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         
     def connect(self, atom):
