@@ -4,6 +4,8 @@ class Compound:
     def __init__(self, atoms, isHeroCompound = False):
         self.atoms = atoms
         self.isHeroCompound = isHeroCompound
+        self.pushed = False
+        self.visited = False
         
     def dfsDraw(self, surface, offX, offY, atom):
         atom.visited = True

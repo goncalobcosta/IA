@@ -36,16 +36,23 @@ class Board:
             if not self.inBoard(nextPos): return False
             
             for other in self.compounds:
-                if(other == compound): continue
-                if other.isInPosition(nextPos) and ((len(compound.atoms) < len(other.atoms)) or not self.canMove(move, other)):
+                if other != compound and other.isInPosition(nextPos) and ((len(compound.atoms) < len(other.atoms)) or not self.canMove(move, other)):
                     print("There is a compound that i cant push anymore")
                     return False
         return True
     
     def handleMove(self, move):
-        if not self.canMove(move, self.hero): return 
+       
+        if not self.canMove(move, self.hero): 
+            return 
+        
         self.handleCircles(move)
-        self.handlePushes(move)
+
+        for compound in self.compounds: 
+            compound.visited = False 
+
+        self.handlePushes(move, self.hero)
+        
         self.hero.move(move)
         self.connectCompounds()
         
@@ -67,15 +74,17 @@ class Board:
                             self.connectIsolatedCompounds()
                     elif (circle.name == "blue"): return           
     
-    def handlePushes(self, move):
-        for atom in self.hero.atoms:
+    def handlePushes(self, move, compound):
+        compound.visited = True
+        for atom in compound.atoms:
             pos = atom.pos
             nextPos = (pos[0] + move[0], pos[1] + move[1])
           
-            for compound in self.compounds:
-                if compound.isInPosition(nextPos) and (len(self.hero.atoms) >= len(compound.atoms)) and self.canMove(move, compound):
-                    compound.push(move)
-        
+            for other in self.compounds:
+                if not other.visited and other.isInPosition(nextPos) and (len(compound.atoms) >= len(other.atoms)) and self.canMove(move, compound):
+                    self.handlePushes(move, other)
+                    other.push(move)
+
     
     def connectIsolatedCompounds(self):
         allCompounds = self.compounds

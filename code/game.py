@@ -67,7 +67,7 @@ class Game:
     
     def playGame(self):
         
-        self.board = Level(4).board
+        self.board = Level(5).board
         while (True):
             self.screen.fill(WHITE)
             for event in pygame.event.get():                

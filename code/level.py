@@ -169,3 +169,63 @@ class Level:
 
             return Board(6, 6, walls, {}, hero, compounds, circles, wallColor)
        
+        elif (self.level == 5):
+
+            he1 = Atom(He, (4, 1))
+            he2 = Atom(He, (3, 2))
+            he3 = Atom(He, (2, 3))
+            he4 = Atom(He, (1, 4))
+            he5 = Atom(He, (3, 4))
+            he6 = Atom(He, (4, 3))
+            he7 = Atom(He, (5, 4))
+            he8 = Atom(He, (6, 3))
+            he9 = Atom(He, (4, 5))
+            he10 = Atom(He, (3, 6))
+            o1 = Atom(O, (2, 2))
+            o2 = Atom(O, (5, 2))
+            h1 = Atom(H, (2, 5), True)
+            h2 = Atom(H, (5, 5))       
+    
+
+
+            hero = Compound([h1], True)
+            compounds = [
+                Compound([he1]),
+                Compound([he2]),
+                Compound([he3]),
+                Compound([he4]),
+                Compound([he5]),
+                Compound([he6]),
+                Compound([he7]),
+                Compound([he8]),
+                Compound([he9]),
+                Compound([he10]),
+                Compound([o1]),
+                Compound([o2]),
+                Compound([h2]),
+                ]
+            
+            walls = {
+                (2, 0), (3, 0), (4, 0), (5, 0),
+                (1, 1), (2, 1), (5, 1), (6, 1), 
+                (0, 2), (1, 2), (6, 2), (7, 2), 
+                (0, 3), (7, 3),
+                (0, 4), (7, 4),
+                (0, 5), (1, 5), (6, 5), (7, 5), 
+                (1, 6), (2, 6), (5, 6), (6, 6), 
+                (2, 7), (3, 7), (4, 7), (5, 7),
+              }
+
+        
+            wallColor = (94, 197, 228)
+
+            blank = {
+                (0, 0), (1, 0), (6, 0), (7, 0), 
+                (0, 1), (7, 1), 
+                (0, 6), (7, 6),
+                (0, 7), (1, 7), (6, 7), (7, 7), 
+
+            }
+
+            return Board(8, 8, walls, blank, hero, compounds, {}, wallColor)
+       
