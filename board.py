@@ -1,198 +1,145 @@
 import pygame
-from atom import *
+from compound import *
 from circle import *
 
-global board_start_x
-global board_start_y
-
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+DARK_GRAY = (150, 150, 150)
+GRAY = (192, 192, 192)
+RED = (255, 138, 128)
+YELLOW = (254, 216, 119)
+BLUE = (166, 197, 254)
+GREEN = (175, 219, 140)
+BACKGROUND = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, grid, atoms, compound, circles, wallColor):
+    def __init__(self, width, height, walls, blank, hero, compounds, circles, wallColor):
         self.width = width
         self.height = height
-        self.grid = grid
-        self.atoms = atoms
-        self.compound = compound 
-        self.wallColor = wallColor
+        self.walls = walls
+        self.blank = blank
+        self.hero = hero
+        self.compounds = compounds
         self.circles = circles
+        self.wallColor = wallColor
         
-    def inBoard(self, x, y):
-        return (0 <= x < self.width and 0 <= y < self.height) and self.grid[y][x] == None
+    def inBoard(self, pos):
+        return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
     
-    def canPush(self, x, y, dx, dy):
-        return self.grid[y+2*dy][x+2*dx] == None
     
-    def nextToAtom(self, x, y):
-        return any(atom.pos == (x,y) for atom in self.atoms)
-    
-    def handleMove(self, dx, dy):
-        
-        self.checkCircles(dx, dy)
-        ll = [(atom.name, atom.pos) for atom in self.atoms]
-        ll2 = [(atom.name, atom.pos) for atom in self.compound]
-        print(ll)
-        print(ll2)
-
-        atomsToPush = []
-        for atom in self.compound:
-            x, y = atom.pos
-            if not self.inBoard(x+dx, y+dy):
-                return
-            if self.nextToAtom(x+dx, y+dy) :
-                if not self.canPush(x, y, dx, dy):
-                    return 
-                atomsToPush += [atom for atom in self.atoms if atom.pos == (x+dx, y+dy)]
-                
-        self.pushAtoms(atomsToPush, dx, dy)    
-        self.moveCompound(dx, dy)
-        
-    def checkCircles(self, dx, dy):
-        for circle in self.circles:
-            if (circle.name == "green"):
-                self.addConnection(circle.pos, dx, dy)
-            if (circle.name == "red"):
-                self.removeConnection(circle.pos, dx, dy)
-            if (circle.name == "blue"):
-                self.rotateCompound(circle.pos, dx, dy)
-           
-    def addConnection(self, pos, dx, dy):
-        x, y = pos 
-        candidates = []
-        if dx == 0 and dy == -1:
-            candidates = [(x, y + 1), (x + 1, y + 1)]
-        if dx == 0 and dy == 1:
-            candidates = [(x, y), (x + 1, y)]
-        if dx == -1 and dy == 0:
-            candidates = [(x + 1, y + 1), (x + 1, y)]
-        if dx == 1 and dy == 0:
-            candidates = [(x, y), (x, y + 1)]
-        
-        l = [atom for atom in self.compound if atom.pos in candidates]
-
-        if len(l) == 2 and l[0].connections > 0 and l[1].connections > 0:
-            self.doubleConnect(l[1], l[0])
-
-    def removeConnection(self, pos, dx, dy):
-        x, y = pos 
-        candidates = []
-        if dx == 0 and dy == -1:
-            candidates = [(x, y + 1), (x + 1, y + 1)]
-        if dx == 0 and dy == 1:
-            candidates = [(x, y), (x + 1, y)]
-        if dx == -1 and dy == 0:
-            candidates = [(x + 1, y + 1), (x + 1, y)]
-        if dx == 1 and dy == 0:
-            candidates = [(x, y), (x, y + 1)]
-        
-        l = [atom for atom in self.compound if atom.pos in candidates]
-
-        if len(l) == 2 and l[1].notFull() and l[0].notFull():
-            self.removeAtom(l[1], l[0])
-    
-    def rotateCompound(self, pos, dx, dy):
-        x, y = pos 
-        candidates = []
-        if dx == 0 and dy == -1:
-            candidates = [(x, y + 1), (x + 1, y + 1)]
-        if dx == 0 and dy == 1:
-            candidates = [(x, y), (x + 1, y)]
-        if dx == -1 and dy == 0:
-            candidates = [(x + 1, y + 1), (x + 1, y)]
-        if dx == 1 and dy == 0:
-            candidates = [(x, y), (x, y + 1)]
-        
-        l = [atom for atom in self.compound if atom.pos in candidates]
-
-        if len(l) == 2:
-            self.rotateAtom(l[1], l[0], dx, dy)
-        
-    def doubleConnect(self, atom, atom2):
-        atom.connections -= 1
-        atom2.connections -= 1
-        
-    def pushAtoms(self, atoms, dx, dy):
-        for atom in atoms:
-            atom.move(dx, dy)
-                
-    def moveCompound(self, dx, dy):
-        for atom in self.compound:
-            atom.move(dx, dy)
-        self.connectAtoms()
+    def canMove(self, move, compound):
+        for atom in compound.atoms:
+            pos = atom.pos
+            nextPos = (pos[0] + move[0], pos[1] + move[1])
+            if not self.inBoard(nextPos):
+                return False
             
-    def connectAtom(self, connection):
-        atom1, atom2 = connection
-        atom1.connections -= 1
-        atom2.connections -= 1
-        self.compound.append(atom2)
-        self.atoms.remove(atom2)
+            for other in self.compounds:
+                if(other == compound): continue
+                if other.isInPosition(nextPos) and ((len(compound.atoms) < len(other.atoms)) or not self.canMove(move, other)):
+                    print("There is a compound that i cant push anymore")
+                    return False
+                
+            '''
+            while self.atoms.get(nextPos) is not None:
+                nextPos = (nextPos[0] + move[0], nextPos[1] + move[1])
+                if not self.inBoard(nextPos):
+                    return False
+            '''
+        return True
     
-    def connectAtoms(self):
-        connections = []
-        for atom in self.compound:
-            for single in self.atoms:
-                if atom.canConnectTo(single):
-                    connections.append((atom, single))
-       
-        for connection in connections:
-            self.connectAtom(connection)
-
-    def removeAtom(self, atom1, atom2):
-
-        if (atom1.connections == 0): 
-            self.atoms.append(atom1)
-            self.compound.remove(atom1)
-        if (atom2.connections == 0): 
-            self.atoms.append(atom2)
-            self.compound.remove(atom2)
-        atom1.connections += 1
-        atom2.connections += 1
-    
-    def rotateAtom(self, atom1, atom2, dx, dy):
-        (x1, y1) = atom1.pos
-        (x2, y2) = atom2.pos
+    def handleMove(self, move):
+        if not self.canMove(move, self.hero):
+            return 
+        self.handleCircles(move)
+        self.handlePushes(move)
+        self.hero.move(move)
+        self.connectCompounds()
         
-        if dx == 0 and dy == -1: #cima
-            if (x1 < x2): 
-                atom2.move(-1, 1)
-            else: 
-                atom1.move(-1, 1)
-        if dx == 0 and dy == 1: #baixo
-            if (x1 < x2): 
-                atom1.move(1, -1)
-            else: 
-                atom2.move(1, -1)
-        if dx == -1 and dy == 0: #esquerda
-            if (y1 < y2): 
-                atom1.move(1, 1)
-            else: 
-                atom2.move(1, 1)
-        if dx == 1 and dy == 0: #direita
-            if (y1 < y2): 
-                atom2.move(-1, -1)  
-            else: 
-                atom1.move(-1, -1)  
+    def handleCircles(self, move):
+        allCompounds = [self.hero] + self.compounds
+        for pos, circle in self.circles.items():
+            for compound in allCompounds:
+                atom1, atom2 = compound.getCandidates(move, pos)
+                if (atom1 != [] and atom2 != []):
+                    if (circle.name == "green"):
+                        compound.addConnection(atom1[0], atom2[0])
+                    elif (circle.name == "red"):
+                        compound.removeConnection(atom1[0], atom2[0])
+                        isolatedCompound = compound.checkIsolation()
+                        if isolatedCompound != []:
+                            print("THERE IS A NEW COMPOUND!")
+                            newCompound = Compound(isolatedCompound)
+                            self.compounds.append(newCompound)
+                            self.connectIsolatedCompounds()
 
+                    elif (circle.name == "blue"):
+                        return           
+    
+    def handlePushes(self, move):
+        for atom in self.hero.atoms:
+            pos = atom.pos
+            nextPos = (pos[0] + move[0], pos[1] + move[1])
+          
+            for compound in self.compounds:
+                if compound.isInPosition(nextPos) and (len(self.hero.atoms) >= len(compound.atoms)) and self.canMove(move, compound):
+                    compound.push(move)
+        
+    
+    def connectIsolatedCompounds(self):
+        allCompounds = self.compounds
+        for i in range(len(allCompounds)-1):
+            for j in range(i+1, len(allCompounds)):
+                res = allCompounds[i].handleConnection(allCompounds[j])
+                if res != []:
+                    for tup in res:
+                        tup[0].connect(tup[1], tup[2], tup[3])
+                    res[0][0].atoms += res[0][1].atoms
+                    self.compounds.remove(res[0][1])       
+        
+    
+    def connectCompounds(self):
+        allCompounds = [self.hero] + self.compounds
+        for i in range(len(allCompounds)-1):
+            for j in range(i+1, len(allCompounds)):
+                res = allCompounds[i].handleConnection(allCompounds[j])
+                if res != []: 
+                    for tup in res:
+                        tup[0].connect(tup[1], tup[2], tup[3])
+                    res[0][0].atoms += res[0][1].atoms
+                    self.compounds.remove(res[0][1])
+        
     def drawBoard(self, surface):
         for y in range(self.height):
             for x in range(self.width):
-                if self.grid[y][x] == "X":
-                    continue 
-                elif self.grid[y][x] == "W":
-                    pygame.draw.rect(surface, self.wallColor, ((800 - self.width * 50) // 2 + x*50, (600 - self.height * 50) // 2 + y*50, 46, 46))
-                    continue
-                pygame.draw.rect(surface, (243, 243, 243), ((800 - self.width * 50) // 2 + x*50, (600 - self.height * 50) // 2 + y*50, 46, 46))
-    
-
-        
-                  
+                if (x, y) in self.walls:
+                    pygame.draw.rect(surface, self.wallColor, ((WIDTH - self.width * SQUARE) // 2 + x*SQUARE, (HEIGHT - self.height * SQUARE) // 2 + y*SQUARE, 46, 46))
+                elif (x, y) not in self.blank:
+                    pygame.draw.rect(surface, BACKGROUND, ((WIDTH - self.width * SQUARE) // 2 + x*SQUARE, (HEIGHT - self.height * SQUARE) // 2 + y*SQUARE, 46, 46))
+      
     def draw(self, surface):
         self.drawBoard(surface)
+
+        for pos, circle in self.circles.items():
+            circle.draw(surface, self.width, self.height, pos)
+
+        self.hero.draw(surface, self.width, self.height)
+
+        for compound in self.compounds:
+            compound.draw(surface, self.width, self.height)
         
-        for atom in self.atoms:
-            atom.draw(surface, self.width, self.height)
-        
-        for atom in self.compound:
-            atom.draw(surface, self.width, self.height)
-        
-        for circle in self.circles:
-            circle.draw(surface, self.width, self.height)
+    def printStat(self):
+        print("My hero is")
+        for atom in self.hero.atoms:
+            x = []
+            for con in atom.connections:
+                x.append(con.pos)
+            print(atom.pos, x)
+        print("=========")
+        for i in self.compounds:
+            l = []
+            for a in i.atoms:
+                l += [a.pos]
+            print(l)
+        print("=========")
