@@ -162,15 +162,15 @@ class Level:
               }
 
             red = {
-                (1, 1) : Circle(BREAK),
-                (2, 1) : Circle(BREAK),
-                (3, 1) : Circle(BREAK),
-                (1, 2) : Circle(BREAK),
-                (2, 2) : Circle(BREAK),
-                (3, 2) : Circle(BREAK),
-                (1, 3) : Circle(BREAK),
-                (2, 3) : Circle(BREAK),
-                (3, 3) : Circle(BREAK),
+                (1, 1),
+                (2, 1),
+                (3, 1),
+                (1, 2),
+                (2, 2),
+                (3, 2),
+                (1, 3),
+                (2, 3),
+                (3, 3),
             }
 
             wallColor = (94, 197, 228)

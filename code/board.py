@@ -126,7 +126,7 @@ class Board:
                 res = allCompounds[i].handleConnection(allCompounds[j])
                 if res != []:
                     for tup in res:
-                        tup[0].connect(tup[1], tup[2], tup[3])
+                        tup[0].connect(tup[2], tup[3])
                     res[0][0].atoms += res[0][1].atoms
                     self.compounds.remove(res[0][1])       
         
