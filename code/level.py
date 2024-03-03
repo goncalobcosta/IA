@@ -137,13 +137,21 @@ class Level:
         
         elif (self.level == 4):
 
-            o1 = Atom(O, (1, 4), True)
-            o2 = Atom(O, (1, 1))
-            o3 = Atom(O, (4, 1))
+            o1 = Atom(O, (2, 1), True)
+            o2 = Atom(O, (2, 2))
+            o3 = Atom(O, (1, 2))
             o4 = Atom(O, (4, 4))
 
-            hero = Compound([o1], True)
-            compounds = [Compound([o2]), Compound([o3]), Compound([o4])]
+            o1.connections = [o2]
+            o2.connections = [o1, o3]
+            o3.connections = [o2]
+
+            o1.updateImage()
+            o2.updateImage()
+            o3.updateImage()
+
+            hero = Compound([o1, o2, o3], True)
+            compounds = [Compound([o4])]
             walls = {
                 (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0),
                 (0, 1), (5, 1), 
@@ -153,7 +161,7 @@ class Level:
                 (0, 5), (1, 5), (2, 5), (3, 5), (4, 5), (5, 5),
               }
 
-            circles = {
+            red = {
                 (1, 1) : Circle(BREAK),
                 (2, 1) : Circle(BREAK),
                 (3, 1) : Circle(BREAK),
@@ -167,7 +175,7 @@ class Level:
 
             wallColor = (94, 197, 228)
 
-            return Board(6, 6, walls, {}, hero, compounds, circles, wallColor)
+            return Board(6, 6, walls, {}, hero, compounds, red, {}, {}, wallColor)
        
         elif (self.level == 5):
 
@@ -224,7 +232,6 @@ class Level:
                 (0, 1), (7, 1), 
                 (0, 6), (7, 6),
                 (0, 7), (1, 7), (6, 7), (7, 7), 
-
             }
 
             return Board(8, 8, walls, blank, hero, compounds, {}, wallColor)

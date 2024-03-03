@@ -14,15 +14,26 @@ GREEN = (175, 219, 140)
 BACKGROUND = (243, 243, 243)
 
 class Board:
-    def __init__(self, width, height, walls, blank, hero, compounds, circles, wallColor):
+    def __init__(self, width, height, walls, blank, hero, compounds, red, green, blue, wallColor):
         self.width = width
         self.height = height
         self.walls = walls
         self.blank = blank
         self.hero = hero
         self.compounds = compounds
-        self.circles = circles
+        self.red = red
+        self.green = green
+        self.blue = blue
         self.wallColor = wallColor
+
+        path = "resources/images/circles/red_circle.png"
+        self.redCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
+
+        path = "resources/images/circles/green_circle.png"
+        self.greenCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
+
+        path = "resources/images/circles/green_circle.png"
+        self.blueCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
         
     def inBoard(self, pos):
         return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
@@ -41,38 +52,58 @@ class Board:
                     return False
         return True
     
+    def breakConnections(self, move):
+
+        connections = []
+        newCompounds = []
+
+        for pos in self.red:
+            atom1, atom2 = self.hero.getCandidates(move, pos)
+            if (atom1 != [] and atom2 != []):
+                connections.append((atom1[0], atom2[0]))
+                self.hero.removeConnection(atom1[0], atom2[0])
+                isolatedCompound = self.hero.checkIsolation()
+                if isolatedCompound != []:
+                    newCompound = Compound(isolatedCompound)
+                    newCompounds.append(newCompounds)
+                    self.compounds.append(newCompound)
+                else:
+                    newCompounds.append([])
+        return connections, newCompounds
+    
+    def reconnectCompounds(self, compounds):
+        print("Reconnect broken links")
+
     def handleMove(self, move):
-       
+        
+        heroAtom = self.hero.atoms[0]
+        nextPos = (heroAtom.pos[0] + move[0], heroAtom.pos[1] + move[1])
+        if not self.inBoard(nextPos) : return
+
+        brokenConnections, newCompounds = self.breakConnections(move)
+
         if not self.canMove(move, self.hero): 
+            self.hero.reconnect(brokenConnections)
+            self.reconnectCompounds(newCompounds)
             return 
         
-        self.handleCircles(move)
+        self.handleGreenCircles(move)
 
         for compound in self.compounds: 
-            compound.visited = False 
+           compound.visited = False 
 
         self.handlePushes(move, self.hero)
         
         self.hero.move(move)
         self.connectCompounds()
         
-    def handleCircles(self, move):
+    def handleGreenCircles(self, move):
         allCompounds = [self.hero] + self.compounds
-        for pos, circle in self.circles.items():
+        for pos in self.green:
             for compound in allCompounds:
                 atom1, atom2 = compound.getCandidates(move, pos)
                 if (atom1 != [] and atom2 != []):
-                    if (circle.name == "green"):
-                        compound.addConnection(atom1[0], atom2[0])
-                    elif (circle.name == "red"):
-                        compound.removeConnection(atom1[0], atom2[0])
-                        isolatedCompound = compound.checkIsolation()
-                        if isolatedCompound != []:
-                            print("THERE IS A NEW COMPOUND!")
-                            newCompound = Compound(isolatedCompound)
-                            self.compounds.append(newCompound)
-                            self.connectIsolatedCompounds()
-                    elif (circle.name == "blue"): return           
+                    compound.addConnection(atom1[0], atom2[0])
     
     def handlePushes(self, move, compound):
         compound.visited = True
@@ -120,8 +151,9 @@ class Board:
     def draw(self, surface):
         self.drawBoard(surface)
 
-        for pos, circle in self.circles.items():
-            circle.draw(surface, self.width, self.height, pos)
+        for (x, y) in self.red:
+            surface.blit(self.redCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 39, (HEIGHT - self.height * 50) // 2 + y*50 + 39))
+
 
         self.hero.draw(surface, self.width, self.height)
 
