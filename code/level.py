@@ -109,12 +109,11 @@ class Level:
             h2 = Atom(H, (1, 6))
             h3 = Atom(H, (6, 1))
             h4 = Atom(H, (6, 6))
-            he = Atom(He, (6, 5))
             c = Atom(C, (4, 3))
             o = Atom(O, (3, 4), True)
             
             hero = Compound([o], True)
-            compounds = [Compound([h1]), Compound([h2]), Compound([h3]), Compound([h4]), Compound([c]), Compound([he])]
+            compounds = [Compound([h1]), Compound([h2]), Compound([h3]), Compound([h4]), Compound([c])]
 
             walls = {
                 (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
@@ -128,12 +127,12 @@ class Level:
             }
 
             circles = {
-                (3, 3) : Circle(BREAK)
+                (3, 3)
             }
             
             wallColor = (94, 197, 228)
             
-            return Board(8, 8, walls, {}, hero, compounds, circles, wallColor)
+            return Board(8, 8, walls, {}, hero, compounds, circles, {},{}, wallColor)
         
         elif (self.level == 4):
 

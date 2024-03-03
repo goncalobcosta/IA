@@ -53,26 +53,30 @@ class Board:
         return True
     
     def breakConnections(self, move):
+        
+        allCompounds = [self.hero] + self.compounds
 
         connections = []
         newCompounds = []
 
-        for pos in self.red:
-            atom1, atom2 = self.hero.getCandidates(move, pos)
-            if (atom1 != [] and atom2 != []):
-                connections.append((atom1[0], atom2[0]))
-                self.hero.removeConnection(atom1[0], atom2[0])
-                isolatedCompound = self.hero.checkIsolation()
-                if isolatedCompound != []:
-                    newCompound = Compound(isolatedCompound)
-                    newCompounds.append(newCompound)
-                    self.compounds.append(newCompound)
+        for compound in allCompounds:
+            for pos in self.red:
+                atom1, atom2 = compound.getCandidates(move, pos)
+                if (atom1 != [] and atom2 != []):
+                    print("Cutting connection between ", atom1[0].pos, "and", atom2[0].pos)
+                    connections.append((atom1[0], atom2[0]))
+                    compound.removeConnection(atom1[0], atom2[0])
+                    isolatedCompound = compound.checkIsolation()
+                    if isolatedCompound != []:
+                        newCompound = Compound(isolatedCompound)
+                        newCompounds.append((compound, newCompound))
+                        self.compounds.append(newCompound)
         return connections, newCompounds
     
     def reconnectCompounds(self, compounds):
-        for compound in compounds:
-            self.hero.atoms += compound.atoms
-            self.compounds.remove(compound)
+        for (oldCompound, newCompound) in compounds:
+            oldCompound.atoms += newCompound.atoms
+            self.compounds.remove(newCompound)
 
     def handleMove(self, move):
         
@@ -89,7 +93,6 @@ class Board:
         
         self.handleGreenCircles(move)
         
-        self.connectIsolatedCompounds()
 
         for compound in self.compounds: 
            compound.visited = False 
@@ -98,6 +101,7 @@ class Board:
         
         self.hero.move(move)
         self.connectCompounds()
+    
         
     def handleGreenCircles(self, move):
         allCompounds = [self.hero] + self.compounds
@@ -119,17 +123,6 @@ class Board:
                     other.push(move)
 
     
-    def connectIsolatedCompounds(self):
-        allCompounds = self.compounds
-        for i in range(len(allCompounds)-1):
-            for j in range(i+1, len(allCompounds)):
-                res = allCompounds[i].handleConnection(allCompounds[j])
-                if res != []:
-                    for tup in res:
-                        tup[0].connect(tup[2], tup[3])
-                    res[0][0].atoms += res[0][1].atoms
-                    self.compounds.remove(res[0][1])       
-        
     
     def connectCompounds(self):
         allCompounds = [self.hero] + self.compounds
