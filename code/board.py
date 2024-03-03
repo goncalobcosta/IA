@@ -65,14 +65,14 @@ class Board:
                 isolatedCompound = self.hero.checkIsolation()
                 if isolatedCompound != []:
                     newCompound = Compound(isolatedCompound)
-                    newCompounds.append(newCompounds)
+                    newCompounds.append(newCompound)
                     self.compounds.append(newCompound)
-                else:
-                    newCompounds.append([])
         return connections, newCompounds
     
     def reconnectCompounds(self, compounds):
-        print("Reconnect broken links")
+        for compound in compounds:
+            self.hero.atoms += compound.atoms
+            self.compounds.remove(compound)
 
     def handleMove(self, move):
         
@@ -88,6 +88,8 @@ class Board:
             return 
         
         self.handleGreenCircles(move)
+        
+        self.connectIsolatedCompounds()
 
         for compound in self.compounds: 
            compound.visited = False 
@@ -136,7 +138,7 @@ class Board:
                 res = allCompounds[i].handleConnection(allCompounds[j])
                 if res != []: 
                     for tup in res:
-                        tup[0].connect(tup[1], tup[2], tup[3])
+                        tup[0].connect(tup[2], tup[3])
                     res[0][0].atoms += res[0][1].atoms
                     self.compounds.remove(res[0][1])
         
@@ -153,7 +155,6 @@ class Board:
 
         for (x, y) in self.red:
             surface.blit(self.redCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 39, (HEIGHT - self.height * 50) // 2 + y*50 + 39))
-
 
         self.hero.draw(surface, self.width, self.height)
 

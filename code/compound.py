@@ -33,7 +33,7 @@ class Compound:
         for atom in self.atoms:
             atom.pos = (atom.pos[0] + move[0], atom.pos[1] + move[1])
             
-    def connect(self, compound, src, dest):
+    def connect(self, src, dest):
         src.connect(dest)
         dest.connect(src) 
         
@@ -43,7 +43,6 @@ class Compound:
             for atom2 in compound.atoms:
                 if atom.canConnectTo(atom2): 
                    res.append((self, compound, atom, atom2))
-                   print("Deviamos ligar", atom.pos, atom2.pos)
         return res
         
     def push(self, move):
@@ -91,3 +90,9 @@ class Compound:
         self.atoms = [atom for atom in self.atoms if atom.visited]
         
         return isolated
+    
+    def reconnect(self, connections):
+        for connection in connections:
+            atom1, atom2 = connection
+            self.connect(atom1, atom2)
+            
