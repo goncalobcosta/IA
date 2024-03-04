@@ -277,4 +277,63 @@ class Level:
             }
 
             return Board(10, 8, walls, blank, hero, compounds, red, green, {}, wallColor)
+        elif (self.level == 7):
+
+            h1 = Atom(H, (2, 2))
+            h2 = Atom(H, (6, 2))
+            h3 = Atom(H, (1, 4))
+            h4 = Atom(H, (7, 4))
+            h5 = Atom(H, (2, 6)) 
+            h6 = Atom(H, (6, 6))
+            h7 = Atom(H, (3, 7))
+            h8 = Atom(H, (5, 7))
+            o = Atom(O, (4, 1), True)
+            c1 = Atom(C, (2, 4))
+            c2 = Atom(C, (4, 4))
+            c3 = Atom(C, (6, 4))
+
+            c1.connections = [h3]
+            h3.connections = [c1]
+
+            c3.connections = [h4]
+            h4.connections = [c3]
+
+            h3.updateImage()
+            h4.updateImage()
+            c1.updateImage()
+            c3.updateImage()
+
+            hero = Compound([o], True)
+            compounds = [
+                Compound([h1]),
+                Compound([h2]),
+                Compound([h3, c1]),
+                Compound([h4, c3]),
+                Compound([c2]),
+                Compound([h5]),
+                Compound([h6]),
+                Compound([h7]),
+                Compound([h8]),
+            ]
+            
+            walls = {
+                (2, 0), (3, 0), (4, 0), (5, 0), (6, 0),
+                (0, 1), (1, 1), (2, 1), (6, 1), (7, 1), (8, 1),
+                (0, 2), (8, 2),
+                (0, 3), (8, 3),
+                (0, 4), (8, 4),
+                (0, 5), (8, 5),
+                (0, 6), (8, 6),
+                (0, 7), (8, 7),
+                (0, 8), (8, 8),
+                (0, 9), (1, 9), (2, 9), (3, 9), (4, 9), (5, 9), (6, 9), (7, 9), (8, 9),
+            }
+
+            wallColor = (94, 197, 228)
+
+            blank = {
+                (0, 0), (1, 0), (7, 0), (8, 0)
+            }
+
+            return Board(9, 10, walls, blank, hero, compounds, {}, {}, {}, wallColor)
        
