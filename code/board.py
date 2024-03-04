@@ -47,7 +47,7 @@ class Board:
             if not self.inBoard(nextPos): return False
             
             for other in self.compounds:
-                if other != compound and other.isInPosition(nextPos) and ((len(compound.atoms) < len(other.atoms)) or not self.canMove(move, other)):
+                if other != compound and other.isInPosition(nextPos) and (not self.canMove(move, other)):
                     print("There is a compound that i cant push anymore")
                     return False
         return True
@@ -118,7 +118,7 @@ class Board:
             nextPos = (pos[0] + move[0], pos[1] + move[1])
           
             for other in self.compounds:
-                if not other.visited and other.isInPosition(nextPos) and (len(compound.atoms) >= len(other.atoms)) and self.canMove(move, compound):
+                if not other.visited and other.isInPosition(nextPos) and self.canMove(move, compound):
                     self.handlePushes(move, other)
                     other.push(move)
 
