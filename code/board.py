@@ -175,7 +175,14 @@ class Board:
 
         for compound in self.compounds:
             compound.draw(surface, self.width, self.height)
-        
+
+    def win(self):
+        allCompounds = [self.hero] + self.compounds
+        for compound in allCompounds:
+            if not compound.fullyConnected():
+                return False
+        return True
+
     def printStat(self):
         print("My hero is")
         for atom in self.hero.atoms:

@@ -137,3 +137,9 @@ class Compound:
             if(atom1.canConnectTo(atom2) and (atom2 not in atom1.connections)):
                 atom1.connect(atom2)
                 atom2.connect(atom1)
+
+    def fullyConnected(self):
+        for atom in self.atoms:
+            if len(atom.connections) < atom.boundLimit:
+                return False
+        return True

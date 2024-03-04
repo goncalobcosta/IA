@@ -16,6 +16,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.titleFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 100) 
         self.playFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 30)
+        self.nameFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 40)
         self.levelFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 50)
         self.commandFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 20)
         self.option = 0
@@ -176,6 +177,10 @@ class Game:
         
         self.board = Level(self.level).board
         while (True):
+
+            if self.board.win() : 
+                print("YOU WON!")
+
             self.screen.fill(WHITE)
             for event in pygame.event.get():                
                 if event.type == pygame.QUIT:
@@ -217,18 +222,21 @@ class Game:
         levels = self.commandFont.render("L : levels", True, DARK_GRAY)
         menu = self.commandFont.render("M : menu", True, DARK_GRAY)
         leave = self.commandFont.render("Q : quit", True, DARK_GRAY)
-        
+        name = self.nameFont.render("SPACESHIP", True, DARK_GRAY)
+
         reset_rect = reset.get_rect(topleft=(20, 20))
         hint_rect = hint.get_rect(topleft=(20, 45))
         levels_rect = levels.get_rect(topleft=(20, 70))
         menu_rect = menu.get_rect(topleft=(20, 95))
         leave_rect = leave.get_rect(topleft=(20, 120))
+        name_rect = name.get_rect(bottomleft=(20, 580))
         
         self.screen.blit(reset, reset_rect)
         self.screen.blit(levels, levels_rect)
         self.screen.blit(menu, menu_rect)
         self.screen.blit(hint, hint_rect)
         self.screen.blit(leave, leave_rect)
+        self.screen.blit(name, name_rect)
         
     def resetGame(self):
         self.board = Level(self.level).board
