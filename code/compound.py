@@ -10,8 +10,7 @@ class Compound:
     def dfsDraw(self, surface, offX, offY, atom):
         atom.visited = True
         for neighbour in atom.connections:
-            isDoubleConnection = atom.connections.count(neighbour) == 2
-            atom.drawConnection(surface, offX, offY, neighbour, isDoubleConnection)
+            atom.drawConnection(surface, offX, offY, neighbour, atom.connections.count(neighbour))
             if not neighbour.visited:
                 self.dfsDraw(surface, offX, offY, neighbour)
         

@@ -55,12 +55,12 @@ class Level:
             }
 
             circles = {
-                (2, 2) : Circle(ADD)
+                (2, 2)
             }
 
             wallColor = (94, 197, 228)
             
-            return Board(6, 6, walls, {}, hero, compounds, circles, wallColor)
+            return Board(6, 6, walls, {}, hero, compounds, circles, {}, {}, wallColor)
        
         elif (self.level == 2):
             h1 = Atom(H, (1, 5))
@@ -93,8 +93,8 @@ class Level:
                 (0, 7), (1, 7), (2, 7), (3, 7), (4, 7)
             }
 
-            circles = {
-                (3, 3) : Circle(ADD)
+            green = {
+                (3, 3)
             }
             
             blank = {
@@ -103,7 +103,7 @@ class Level:
 
             wallColor = (94, 197, 228)
             
-            return Board(8, 8, walls, blank, hero, compounds, circles, wallColor)
+            return Board(8, 8, walls, blank, hero, compounds, {}, green, {}, wallColor)
         elif (self.level == 3):
             h1 = Atom(H, (1, 1))
             h2 = Atom(H, (1, 6))
@@ -126,13 +126,13 @@ class Level:
                 (0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7)
             }
 
-            circles = {
+            red = {
                 (3, 3)
             }
             
             wallColor = (94, 197, 228)
             
-            return Board(8, 8, walls, {}, hero, compounds, circles, {},{}, wallColor)
+            return Board(8, 8, walls, {}, hero, compounds, red, {}, {}, wallColor)
         
         elif (self.level == 4):
 
@@ -233,5 +233,48 @@ class Level:
                 (0, 7), (1, 7), (6, 7), (7, 7), 
             }
 
-            return Board(8, 8, walls, blank, hero, compounds, {}, wallColor)
+            return Board(8, 8, walls, blank, hero, compounds, {}, {}, {}, wallColor)
+        elif (self.level == 6):
+
+            h1 = Atom(H, (2, 4))
+            h2 = Atom(H, (2, 6))
+            o1 = Atom(O, (4, 1), True)
+            o2 = Atom(O, (8, 1))
+
+            hero = Compound([o1], True)
+            compounds = [
+                Compound([h1]),
+                Compound([h2]),
+                Compound([o2]),
+                ]
+            
+            walls = {
+                (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (9, 0),
+                (3, 1), (6, 1), (9, 1), 
+                (3, 2), (9, 2),
+                (0, 3), (1, 3), (2, 3), (3, 3), (9, 3),
+                (0, 4), (3, 4), (9, 4),
+                (0, 5), (9, 5),
+                (0, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6), (8, 6), (9, 6),
+                (0, 7), (1, 7), (2, 7), (3, 7)
+              }
+
+            red = {
+                (5, 1), (6, 1)
+            }
+
+            green = {
+                (7, 1), (7, 2), (7, 3), (6, 2), (6, 4), (5, 3), (5, 4), (4, 2), (4, 3), (4, 4)
+            }
+
+            wallColor = (94, 197, 228)
+
+            blank = {
+                (0, 0), (1, 0), (2, 0),
+                (0, 1), (1, 1), (2, 1),
+                (0, 2), (1, 2), (2, 2),
+                (4, 7), (5, 7), (6, 7), (7, 7), (8, 7), (9, 7)
+            }
+
+            return Board(10, 8, walls, blank, hero, compounds, red, green, {}, wallColor)
        

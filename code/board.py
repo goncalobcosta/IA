@@ -149,6 +149,9 @@ class Board:
         for (x, y) in self.red:
             surface.blit(self.redCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 39, (HEIGHT - self.height * 50) // 2 + y*50 + 39))
 
+        for (x, y) in self.green:
+            surface.blit(self.greenCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 41, (HEIGHT - self.height * 50) // 2 + y*50 + 41))
+
         self.hero.draw(surface, self.width, self.height)
 
         for compound in self.compounds:
