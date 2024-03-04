@@ -32,7 +32,7 @@ class Board:
         path = "resources/images/circles/green_circle.png"
         self.greenCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
 
-        path = "resources/images/circles/green_circle.png"
+        path = "resources/images/circles/blue_circle.png"
         self.blueCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
         
     def inBoard(self, pos):
@@ -44,7 +44,10 @@ class Board:
             pos = atom.pos
             nextPos = (pos[0] + move[0], pos[1] + move[1])
             
-            if not self.inBoard(nextPos): return False
+            if not self.inBoard(nextPos): 
+                print(nextPos)
+                print("position not in board")
+                return False
             
             for other in self.compounds:
                 if other != compound and other.isInPosition(nextPos) and (not self.canMove(move, other)):
@@ -84,14 +87,19 @@ class Board:
         nextPos = (heroAtom.pos[0] + move[0], heroAtom.pos[1] + move[1])
         if not self.inBoard(nextPos) : return
 
+        
         brokenConnections, newCompounds = self.breakConnections(move)
-
+        print("1")
         if not self.canMove(move, self.hero): 
+            print("2")
             self.hero.reconnect(brokenConnections)
+            print("3")
             self.reconnectCompounds(newCompounds)
+            print("4")
             return 
         
         self.handleGreenCircles(move)
+        self.handleBlueCircles(move)
         
 
         for compound in self.compounds: 
@@ -110,6 +118,16 @@ class Board:
                 atom1, atom2 = compound.getCandidates(move, pos)
                 if (atom1 != [] and atom2 != []):
                     compound.addConnection(atom1[0], atom2[0])
+
+    def handleBlueCircles(self, move):
+        if not self.hero.isSnake(): return
+        allCompounds = [self.hero] + self.compounds
+        for pos in self.blue:
+            for compound in allCompounds:
+                atom1, atom2 = compound.getCandidates(move, pos)
+                if (atom1 != [] and atom2 != []):
+                    print("é preciso rodar")
+                    compound.rotate(move)
     
     def handlePushes(self, move, compound):
         compound.visited = True
@@ -126,14 +144,20 @@ class Board:
     
     def connectCompounds(self):
         allCompounds = [self.hero] + self.compounds
-        for i in range(len(allCompounds)-1):
-            for j in range(i+1, len(allCompounds)):
-                res = allCompounds[i].handleConnection(allCompounds[j])
+        removed = []
+        for compound1 in allCompounds:
+            for compound2 in allCompounds:
+                if ((compound1 == compound2) or (compound2 in removed) or (compound1 in removed)): continue
+
+                print(compound1, compound2)
+                res = compound1.handleConnection(compound2)
                 if res != []: 
-                    for tup in res:
-                        tup[0].connect(tup[2], tup[3])
-                    res[0][0].atoms += res[0][1].atoms
-                    self.compounds.remove(res[0][1])
+                    print("é preciso ligar")
+                    for atom1,atom2 in res:
+                        compound1.connect(atom1, atom2)
+                    compound1.atoms += compound2.atoms
+                    removed.append(compound2)
+                    self.compounds.remove(compound2)
         
     def drawBoard(self, surface):
         for y in range(self.height):
@@ -151,6 +175,9 @@ class Board:
 
         for (x, y) in self.green:
             surface.blit(self.greenCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 41, (HEIGHT - self.height * 50) // 2 + y*50 + 41))
+
+        for (x, y) in self.blue:
+            surface.blit(self.blueCircle, ((WIDTH - self.width * 50) // 2 + x*50 + 41.5, (HEIGHT - self.height * 50) // 2 + y*50 + 41.5))
 
         self.hero.draw(surface, self.width, self.height)
 
