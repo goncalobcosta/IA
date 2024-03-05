@@ -1,6 +1,5 @@
 import pygame
 from code.compound import *
-from code.circle import *
 
 # Colors
 WHITE = (255, 255, 255)
@@ -12,9 +11,10 @@ YELLOW = (254, 216, 119)
 BLUE = (166, 197, 254)
 GREEN = (175, 219, 140)
 BACKGROUND = (243, 243, 243)
+GOLD = (218, 165, 32)
 
 class Board:
-    def __init__(self, width, height, walls, blank, hero, compounds, red, green, blue, wallColor):
+    def __init__(self, width, height, walls, blank, hero, compounds, red, green, blue, wallColor, name):
         self.width = width
         self.height = height
         self.walls = walls
@@ -25,6 +25,7 @@ class Board:
         self.green = green
         self.blue = blue
         self.wallColor = wallColor
+        self.name = name
 
         path = "resources/images/circles/red_circle.png"
         self.redCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
@@ -37,8 +38,7 @@ class Board:
         
     def inBoard(self, pos):
         return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
-    
-    
+   
     def canMove(self, move, compound):
         for atom in compound.atoms:
             pos = atom.pos
@@ -100,8 +100,7 @@ class Board:
         
         self.hero.move(move)
         self.connectCompounds()
-    
-        
+         
     def handleGreenCircles(self, move):
         allCompounds = [self.hero] + self.compounds
         for pos in self.green:
@@ -133,9 +132,7 @@ class Board:
                 if not other.visited and other.isInPosition(nextPos) and self.canMove(move, compound):
                     self.handlePushes(move, other)
                     other.push(move)
-
-    
-    
+  
     def connectCompounds(self):
         allCompounds = [self.hero] + self.compounds
         removed = []

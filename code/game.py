@@ -2,6 +2,9 @@ import os
 import pygame
 import sys
 from code.level import * 
+from code.algorithms import *
+import random
+import math 
 
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
@@ -14,19 +17,18 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        self.titleFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 100) 
+        self.titleFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 80) 
         self.playFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 30)
         self.nameFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 40)
         self.levelFont = pygame.font.Font("resources/fonts/Quicksand-Medium.ttf", 50)
         self.commandFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 20)
         self.option = 0
+        self.stars = [(random.randint(0, WIDTH), random.randint(0, HEIGHT)) for _ in range(50)]
         
     def play(self):
         while True: 
             self.displayMenu()
            
-        
-
     def drawLevels(self):
         self.screen.fill(WHITE)
 
@@ -144,6 +146,65 @@ class Game:
                         return
             pygame.display.flip()
             self.clock.tick(60)
+    
+    def drawStars(self):
+        for star in self.stars:
+            self.draw_star(self.screen, GOLD, star, 5, 10, 5)  # Adjust the parameters as needed
+
+    def updateStars(self):
+        for i in range(len(self.stars)):
+            self.stars[i] = (self.stars[i][0] + random.randint(-2, 2), self.stars[i][1] + random.randint(-2, 2))
+
+    def draw_star(self, surface, color, pos, outer_radius, inner_radius, points):
+        x, y = pos
+        angle = 0
+        angle_increment = math.pi * 2 / points
+        outer_points = []
+
+        for _ in range(points):
+            outer_points.extend([(x + outer_radius * math.cos(angle), y + outer_radius * math.sin(angle))])
+            angle += angle_increment
+            outer_points.extend([(x + inner_radius * math.cos(angle), y + inner_radius * math.sin(angle))])
+            angle += angle_increment
+
+        pygame.draw.circle(surface, GOLD, (x, y), int(inner_radius * 0.6))  # Adjust the factor for the center size
+        pygame.draw.polygon(surface, color, outer_points, 0)
+
+    def drawWin(self):
+        self.screen.fill(WHITE)
+        self.board.draw(self.screen)
+
+        title = self.titleFont.render("You Won!", True, GOLD)
+        back = self.playFont.render("Play Another", True, BLACK)
+        
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3 - 145))
+        back_ret = back.get_rect(center=(WIDTH // 2, HEIGHT // 10 * 9 ))
+
+        self.drawStars() 
+
+        pygame.draw.rect(self.screen, BLUE, (287.5, HEIGHT // 10 * 9 - 30, 220, 65))
+
+        self.screen.blit(title, title_rect)
+        self.screen.blit(back, back_ret)
+
+        pygame.display.flip()
+
+    def displayWin(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        # Play another
+                        self.displayMenu()
+                        return
+
+            self.drawWin()
+            self.updateStars()  # Update star positions
+            pygame.display.flip()
+            self.clock.tick(60)
 
     def displayMenu(self):
         self.drawMenu()
@@ -180,6 +241,7 @@ class Game:
 
             if self.board.win() : 
                 print("YOU WON!")
+                self.displayWin()
 
             self.screen.fill(WHITE)
             for event in pygame.event.get():                
@@ -211,18 +273,18 @@ class Game:
                         self.board.printStat()
 
             self.board.draw(self.screen)
-            self.drawCommands()
+            self.drawCommands(self.board.name)
             
             pygame.display.flip()
             self.clock.tick(60)        
         
-    def drawCommands(self):
+    def drawCommands(self, name):
         reset = self.commandFont.render("R : reset", True, DARK_GRAY)
         hint = self.commandFont.render("H : hint", True, DARK_GRAY)
         levels = self.commandFont.render("L : levels", True, DARK_GRAY)
         menu = self.commandFont.render("M : menu", True, DARK_GRAY)
         leave = self.commandFont.render("Q : quit", True, DARK_GRAY)
-        name = self.nameFont.render("SPACESHIP", True, DARK_GRAY)
+        name = self.nameFont.render(name, True, DARK_GRAY)
 
         reset_rect = reset.get_rect(topleft=(20, 20))
         hint_rect = hint.get_rect(topleft=(20, 45))

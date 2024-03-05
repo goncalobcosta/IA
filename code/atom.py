@@ -1,4 +1,5 @@
 import pygame
+from copy import deepcopy
 
 He = ("helium", 0)
 H = ("hydrogen", 1)

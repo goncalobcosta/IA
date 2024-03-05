@@ -5,7 +5,6 @@ class Compound:
     def __init__(self, atoms, isHeroCompound = False):
         self.atoms = atoms
         self.isHeroCompound = isHeroCompound
-        self.pushed = False
         self.visited = False
         
     def dfsDraw(self, surface, offX, offY, atom):
@@ -21,8 +20,7 @@ class Compound:
         self.dfsDraw(surface, offX, offY, self.atoms[0])
         for atom in self.atoms:
             atom.draw(surface, offX, offY)
-    
-     
+       
     def addAtom(self, atom):
         self.atoms.append(atom)
         
@@ -52,8 +50,7 @@ class Compound:
           
     def addConnection(self, atom1, atom2):
         if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom2.boundLimit:
-            atom1.connect(atom2)
-            atom2.connect(atom1)  
+            self.connect(atom1, atom2)
     
     def removeConnection(self, atom1, atom2):
         if atom1 in atom2.connections:
@@ -131,12 +128,10 @@ class Compound:
         
         return last not in hero.connections if len(path) > 2 else True
 
-
     def checkConnections(self):
         for atom1, atom2 in combinations(self.atoms, 2):
             if(atom1.canConnectTo(atom2) and (atom2 not in atom1.connections)):
-                atom1.connect(atom2)
-                atom2.connect(atom1)
+                self.connect(atom1,atom2)
 
     def fullyConnected(self):
         for atom in self.atoms:
