@@ -1,5 +1,4 @@
 import pygame
-from copy import deepcopy
 
 He = ("helium", 0)
 H = ("hydrogen", 1)
@@ -86,3 +85,21 @@ class Atom:
                 pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + atom.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + atom.pos[1]*SQUARE + 22), 50, 5))
             elif direction == RIGHT:
                 pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))
+    
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            if (len(self.connections) != len(other.connections)):
+                return False
+            for atom in self.connections:
+                name, pos = atom.name, atom.pos
+                has = False
+                for atom2 in other.connections:
+                    if atom2.name == name and atom2.pos == pos:
+                        has = True
+                        break
+                if not has:
+                    return False
+            return self.name == other.name and self.pos == other.pos
+        else:
+            return False
+    

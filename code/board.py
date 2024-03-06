@@ -194,3 +194,23 @@ class Board:
                 l += [a.pos]
             print(l)
         print("=========")
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.name == other.name and
+                    self.hero == other.hero and
+                    self.compounds == other.compounds)
+        else:
+            return False
+        
+    def copy(self):
+        hero = self.hero.copy()
+        compounds = []
+        for compound in self.compounds:
+            compounds.append(compound.copy())
+        
+        board = self.__class__(self.width, self.height, self.walls, self.blank, hero, compounds, self.red, self.green, self.blue, self.wallColor, self.name)
+        return board
+        
+    def lose(self):
+        return self.hero.fullyConnected()

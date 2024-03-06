@@ -1,5 +1,5 @@
 from code.board import * 
-import copy
+from copy import copy
 
 class Algorithms:
     def __init__ (self, board):
@@ -16,20 +16,46 @@ class Algorithms:
         return nextBoards
 
     @staticmethod
-    def dfs (board, visited):
-        print("olá")
+    def dfs(board, visited, path=[], depth=0, limit=30, hasFound=False):
+        if hasFound: return
         nextBoards = Algorithms.getNextBoards(board)
-        print(nextBoards)
+        
         visited.append(board)
+
         if board.win():
             print("Win")
+            print("Path:", Algorithms.convert_to_directions(path))
+            return
+        
+        if board.lose():
+            print("You lost")
+            return
+        
+        if depth >= limit:
+            print("Depth limit reached")
             return
 
         for nextBoard in nextBoards:
             if nextBoard not in visited:
-                print("visiting ", nextBoard.hero.atoms[0].pos)
-                Algorithms.dfs(nextBoard, visited)
+                path_to_win = Algorithms.dfs(nextBoard, visited, path + [nextBoard.hero.atoms[0].pos], depth + 1, limit, hasFound)
+                if path_to_win:
+                    return path_to_win
 
+    @staticmethod
+    def convert_to_directions(path):
+        directions = []
 
-    
-    
+        for i in range(1, len(path)):
+            current_pos = path[i - 1]
+            next_pos = path[i]
+
+            if current_pos[0] < next_pos[0]:
+                directions.append("RIGHT")
+            elif current_pos[0] > next_pos[0]:
+                directions.append("LEFT")
+            elif current_pos[1] < next_pos[1]:
+                directions.append("DOWN")
+            elif current_pos[1] > next_pos[1]:
+                directions.append("UP")
+
+        return directions

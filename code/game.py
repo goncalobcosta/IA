@@ -24,7 +24,8 @@ class Game:
         self.commandFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 20)
         self.option = 0
         self.stars = [(random.randint(0, WIDTH), random.randint(0, HEIGHT)) for _ in range(50)]
-        
+    
+
     def play(self):
         while True: 
             self.displayMenu()
@@ -234,9 +235,14 @@ class Game:
             pygame.display.flip()
             self.clock.tick(60)
     
+    
+
     def playGame(self):
+
         
         self.board = Level(self.level).board
+        path_to_win = Algorithms.dfs(self.board, [], limit=25)
+
         while (True):
 
             if self.board.win() : 

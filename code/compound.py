@@ -1,6 +1,6 @@
 from itertools import combinations
 from code.atom import *
-
+import copy
 class Compound:
     def __init__(self, atoms, isHeroCompound = False):
         self.atoms = atoms
@@ -138,3 +138,22 @@ class Compound:
             if len(atom.connections) < atom.boundLimit:
                 return False
         return True
+    
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.atoms == other.atoms)
+        else:
+            return False
+    
+    def copy(self):
+        atoms = []
+        for atom in self.atoms:
+            atoms.append(Atom((atom.name, atom.boundLimit), atom.pos, atom.isHero))
+
+        for i, atom in enumerate(self.atoms):
+            connections = [self.atoms.index(con) for con in atom.connections]
+            for j in connections:
+                atoms[i].connections.append(atoms[j])
+
+        compound = self.__class__(atoms, self.isHeroCompound)
+        return compound
