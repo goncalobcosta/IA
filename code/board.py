@@ -88,7 +88,7 @@ class Board:
         if not self.canMove(move, self.hero): 
             self.hero.reconnect(brokenConnections)
             self.reconnectCompounds(newCompounds)
-            return 
+            return False
         
         self.handleGreenCircles(move)
         self.handleBlueCircles(move)
@@ -100,6 +100,8 @@ class Board:
         
         self.hero.move(move)
         self.connectCompounds()
+        
+        return True
          
     def handleGreenCircles(self, move):
         allCompounds = [self.hero] + self.compounds
@@ -212,5 +214,3 @@ class Board:
         board = self.__class__(self.width, self.height, self.walls, self.blank, hero, compounds, self.red, self.green, self.blue, self.wallColor, self.name)
         return board
         
-    def lose(self):
-        return self.hero.fullyConnected()

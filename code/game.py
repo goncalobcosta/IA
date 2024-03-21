@@ -241,12 +241,10 @@ class Game:
 
         
         self.board = Level(self.level).board
-        path_to_win = Algorithms.dfs(self.board, [], limit=25)
 
         while (True):
 
             if self.board.win() : 
-                print("YOU WON!")
                 self.displayWin()
 
             self.screen.fill(WHITE)

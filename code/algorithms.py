@@ -10,36 +10,29 @@ class Algorithms:
         nextBoards = []
         for move in DIRECTIONS:
             new_board = board.copy()
-            new_board.handleMove(move)
-            if new_board != board:
+            canMove = new_board.handleMove(move)
+            if canMove:
                 nextBoards.append(new_board)
         return nextBoards
 
     @staticmethod
-    def dfs(board, visited, path=[], depth=0, limit=30, hasFound=False):
-        if hasFound: return
-        nextBoards = Algorithms.getNextBoards(board)
-        
+    def dfs(board, visited, path=[], depth=0, limit=30):
+
+        nextBoards = Algorithms.getNextBoards(board)        
         visited.append(board)
 
         if board.win():
-            print("Win")
-            print("Path:", Algorithms.convert_to_directions(path))
-            return
-        
-        if board.lose():
-            print("You lost")
-            return
+            return path  
         
         if depth >= limit:
-            print("Depth limit reached")
-            return
+            return None
 
         for nextBoard in nextBoards:
             if nextBoard not in visited:
-                path_to_win = Algorithms.dfs(nextBoard, visited, path + [nextBoard.hero.atoms[0].pos], depth + 1, limit, hasFound)
+                path_to_win = Algorithms.dfs(nextBoard, visited, path + [nextBoard.hero.atoms[0].pos], depth + 1, limit)
                 if path_to_win:
                     return path_to_win
+        return None
 
     @staticmethod
     def convert_to_directions(path):

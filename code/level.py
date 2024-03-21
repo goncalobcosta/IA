@@ -403,41 +403,39 @@ class Level:
             return Board(9, 10, walls, blank, hero, compounds, red, {}, {}, wallColor, "SPACESHIP")
         elif (self.level == 9):
 
-            h1 = Atom(H, (2, 3))
+            o = Atom(O, (4, 4))
+            h1 = Atom(H, (2, 5), True)
             h2 = Atom(H, (6, 3))
-            h3 = Atom(H, (1, 4))
-            h4 = Atom(H, (7, 4))
-            h5 = Atom(H, (2, 5)) 
-            h6 = Atom(H, (6, 5))
-            he = Atom(He, (4, 4), True)
-            n1 = Atom(N, (4, 2))
-            n2 = Atom(N, (4, 6))
             
-            hero = Compound([he], True)
+            hero = Compound([h1], True)
             compounds = [
-                Compound([h1]),
                 Compound([h2]),
-                Compound([h3]),
-                Compound([h4]),
-                Compound([h5]),
-                Compound([h6]),
-                Compound([n1]),
-                Compound([n2]),
+                Compound([o]),
             ]
             
             walls = {
-                (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0),
-                (0, 1), (4, 1), (8, 1),
-                (0, 2), (2, 2), (6, 2), (8, 2),
-                (0, 3), (8, 3),
-                (0, 4), (2, 4), (6, 4), (8, 4),
+                (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0),
+                (3, 1), (8, 1),
+                (0, 2), (1, 2), (2, 2), (3, 2), (8, 2),
+                (0, 3), (5, 3), (8, 3),    
+                (0, 4), (5, 4), (8, 4),
                 (0, 5), (8, 5),
-                (0, 6), (2, 6), (6, 6), (8, 6),
-                (0, 7), (4, 7), (8, 7),
-                (0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8),
+                (0, 6), (5, 6), (6, 6), (7, 6), (8, 6),
+                (0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7)
             }
 
+            blank = {
+                (0, 0), 
+                (1, 0),
+                (2, 0),
+                (0, 1),
+                (1, 1),
+                (2, 1),
+                (6, 7),
+                (7, 7),
+                (8, 7),
+            }
             wallColor = (44, 202, 151)
 
-            return Board(9, 9, walls, {}, hero, compounds, {}, {}, {}, wallColor, "BUTTERFLY")
+            return Board(9, 8, walls, blank, hero, compounds, {}, {}, {}, wallColor, "BUTTERFLY")
         
