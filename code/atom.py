@@ -86,6 +86,9 @@ class Atom:
             elif direction == RIGHT:
                 pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))
     
+    def manhattanDistance(self, atom):
+        return abs(self.pos[0] - atom.pos[0]) + abs(self.pos[1] - atom.pos[1])
+    
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             if (len(self.connections) != len(other.connections)):

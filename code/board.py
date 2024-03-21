@@ -182,6 +182,14 @@ class Board:
                 return False
         return True
 
+    def heuristic(self):
+        distance = 100
+        for compound in self.compounds:
+            d = self.hero.distance(compound)
+            if (d < distance):
+                distance = d
+        self.heuristic = distance
+
     def printStat(self):
         print("My hero is")
         for atom in self.hero.atoms:

@@ -273,6 +273,10 @@ class Game:
                         print("BFS search")
                         path = Algorithms.bfs(self.board)
                         print (path)
+                    elif event.key == pygame.K_a:
+                        print("A* algorithm")
+                        path = Algorithms.aStar(self.board)
+                        print (path)
                     elif event.key == pygame.K_UP :
                         self.board.handleMove(UP)
                     elif event.key == pygame.K_DOWN:

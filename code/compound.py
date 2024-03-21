@@ -139,6 +139,15 @@ class Compound:
                 return False
         return True
     
+    def distance(self, other):
+        distance = 100
+        for atom in self.atoms:
+            for elem in other.atoms:
+                d = atom.manhattanDistance(elem)
+                if (d < distance):
+                    distance = d
+        return distance
+    
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return (self.atoms == other.atoms)

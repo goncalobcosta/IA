@@ -2,8 +2,8 @@ from code.board import *
 from collections import deque
 
 DIR = {
-    (0, -1) :  "UP" ,
-    (0, 1) : "DOWN" ,
+    (0, -1) : "UP",
+    (0, 1) : "DOWN",
     (-1, 0) : "LEFT",
     (1, 0) : "RIGHT", 
 }
@@ -64,3 +64,10 @@ class Algorithms:
                     visited.append(nextBoard)
 
         return None
+    
+    @staticmethod
+    def aStar(board):
+        return
+        
+        
+     
