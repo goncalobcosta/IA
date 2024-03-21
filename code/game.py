@@ -265,6 +265,14 @@ class Game:
                         break
                     elif event.key == pygame.K_r:
                         self.resetGame()
+                    elif event.key == pygame.K_d:
+                        print("DFS search")
+                        path = Algorithms.dfs(self.board)
+                        print(path)
+                    elif event.key == pygame.K_b:
+                        print("BFS search")
+                        path = Algorithms.bfs(self.board)
+                        print (path)
                     elif event.key == pygame.K_UP :
                         self.board.handleMove(UP)
                     elif event.key == pygame.K_DOWN:
