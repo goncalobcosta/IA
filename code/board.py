@@ -182,13 +182,21 @@ class Board:
                 return False
         return True
 
-    def heuristic(self):
-        distance = 100
+    def greedyMove(self, move):
+        distance = float('inf')
+
+        for atom in self.hero.atoms:
+            atom.pos = atom.pos[0] + move[0], atom.pos[1] + move[1]
+
         for compound in self.compounds:
             d = self.hero.distance(compound)
             if (d < distance):
                 distance = d
-        self.heuristic = distance
+
+        for atom in self.hero.atoms:
+            atom.pos = atom.pos[0] - move[0], atom.pos[1] - move[1]
+
+        return distance
 
     def printStat(self):
         print("My hero is")

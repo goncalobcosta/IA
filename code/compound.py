@@ -140,7 +140,7 @@ class Compound:
         return True
     
     def distance(self, other):
-        distance = 100
+        distance = float('inf')
         for atom in self.atoms:
             for elem in other.atoms:
                 d = atom.manhattanDistance(elem)

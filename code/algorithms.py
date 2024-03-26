@@ -8,18 +8,25 @@ DIR = {
     (1, 0) : "RIGHT", 
 }
 
+MOVE = {
+    "UP" : (0, -1),
+    "DOWN" : (0, 1) ,
+    "LEFT" : (-1, 0) ,
+    "RIGHT" : (1, 0) , 
+}
+
 class Algorithms:
     def __init__ (self, board):
         self.board = board
 
     @staticmethod
-    def getNextBoards(board):
+    def getNextBoards(board, visited=[]):
         nextBoards = []
         for move in DIRECTIONS:
-            new_board = board.copy()
-            canMove = new_board.handleMove(move)
-            if canMove:
-                nextBoards.append((new_board, DIR.get(move)))
+            newBoard = board.copy()
+            canMove = newBoard.handleMove(move)
+            if canMove and newBoard not in visited:
+                nextBoards.append((newBoard, DIR.get(move)))
         return nextBoards
 
     @staticmethod
@@ -65,6 +72,43 @@ class Algorithms:
 
         return None
     
+    @staticmethod
+    def greedy(board):
+        
+        visited = []
+        path = []
+
+        while True:
+            if board.win():
+                return path 
+           
+            visited.append(board)
+
+            nextBoards = Algorithms.getNextBoards(board, visited)
+
+            if nextBoards == []:
+                print("Impossible to win")
+                print(path)
+                return []
+
+            nextBoard, direction = Algorithms.greedyMove(board, nextBoards)
+
+            board = nextBoard
+            path.append(direction)
+            
+            
+
+                
+    @staticmethod
+    def greedyMove(board, nextBoards):
+        bestValue = float('inf')
+        for b, direction in nextBoards:
+            value = board.greedyMove(MOVE[direction])
+            if value < bestValue:
+                bestValue = value
+                best = b, direction
+        return best
+        
     @staticmethod
     def aStar(board):
         return

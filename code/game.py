@@ -55,7 +55,6 @@ class Game:
 
         pygame.display.flip()
 
-        pygame.display.flip()
 
     def displayLevels(self):
         self.level = 0
@@ -272,6 +271,10 @@ class Game:
                     elif event.key == pygame.K_b:
                         print("BFS search")
                         path = Algorithms.bfs(self.board)
+                        print (path)
+                    elif event.key == pygame.K_g:
+                        print("Greedy search")
+                        path = Algorithms.greedy(self.board)
                         print (path)
                     elif event.key == pygame.K_a:
                         print("A* algorithm")

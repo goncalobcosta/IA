@@ -13,7 +13,7 @@ class Level:
             h2 = Atom(H, (5, 2))
             h3 = Atom(H, (2, 6))
             h4 = Atom(H, (6, 6))
-            c = Atom(C, (4, 5), True)
+            c = Atom(C, (4, 6), True)
             
             hero = Compound([c], True)
             compounds = [Compound([h1]), Compound([h2]), Compound([h3]), Compound([h4])]
