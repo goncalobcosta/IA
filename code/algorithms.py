@@ -1,5 +1,6 @@
 from code.board import * 
 from collections import deque
+from code.priorityQueue import PriorityQueue
 
 DIR = {
     (0, -1) : "UP",
@@ -16,8 +17,6 @@ MOVE = {
 }
 
 class Algorithms:
-    def __init__ (self, board):
-        self.board = board
 
     @staticmethod
     def getNextBoards(board, visited=[]):
@@ -79,7 +78,7 @@ class Algorithms:
         path = []
 
         while True:
-            if board.win():
+            if board.win(): 
                 return path 
            
             visited.append(board)
@@ -87,8 +86,6 @@ class Algorithms:
             nextBoards = Algorithms.getNextBoards(board, visited)
 
             if nextBoards == []:
-                print("Impossible to win")
-                print(path)
                 return []
 
             nextBoard, direction = Algorithms.greedyMove(board, nextBoards)
@@ -109,9 +106,61 @@ class Algorithms:
                 best = b, direction
         return best
         
+        
     @staticmethod
     def aStar(board):
-        return
+        queue = PriorityQueue()
+        visited = []
+        
+        board.cost = 0
+        board.heuristic_estimate = 0
+        board.path = []
+        queue.push(board)
+        
+        while not queue.empty():
+            currentBoard = queue.pop()            
+            visited.append(currentBoard)
+            
+            if currentBoard.win():
+                return currentBoard.path
+            
+            nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+            for b, direction in nextBoards:
+                visited.append(b)
+                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction])
+                b.cost = currentBoard.cost + 1
+                b.path = currentBoard.path + [direction]
+                queue.push(b)
+        
+        return []
+    
+    @staticmethod
+    def greedySearch(board):
+        queue = PriorityQueue()
+        visited = []
+        
+        board.cost = 0
+        board.heuristic_estimate = 0
+        board.path = []
+        queue.push(board)
+        
+        while not queue.empty():
+            currentBoard = queue.pop()            
+            visited.append(currentBoard)
+            
+            if currentBoard.win():
+                return currentBoard.path
+            
+            nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+            for b, direction in nextBoards:
+                visited.append(b)
+                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction])
+                b.cost = 0
+                b.path = currentBoard.path + [direction]
+                queue.push(b)
+            
+        return []
+    
         
         
      

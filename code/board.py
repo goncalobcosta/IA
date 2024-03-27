@@ -230,3 +230,7 @@ class Board:
         board = self.__class__(self.width, self.height, self.walls, self.blank, hero, compounds, self.red, self.green, self.blue, self.wallColor, self.name)
         return board
         
+    def __lt__(self, other):
+        if (self.cost + self.heuristic_estimate == other.cost + other.heuristic_estimate):
+            return self.heuristic_estimate < other.heuristic_estimate
+        return self.cost + self.heuristic_estimate < other.cost + other.heuristic_estimate

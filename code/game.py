@@ -175,7 +175,7 @@ class Game:
         self.board.draw(self.screen)
 
         title = self.titleFont.render("You Won!", True, GOLD)
-        back = self.playFont.render("Play Another", True, BLACK)
+        back = self.playFont.render("Level menu", True, BLACK)
         
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3 - 145))
         back_ret = back.get_rect(center=(WIDTH // 2, HEIGHT // 10 * 9 ))
@@ -198,7 +198,7 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         # Play another
-                        self.displayMenu()
+                        self.displayLevels()
                         return
 
             self.drawWin()
@@ -267,18 +267,27 @@ class Game:
                     elif event.key == pygame.K_d:
                         print("DFS search")
                         path = Algorithms.dfs(self.board)
+                        print(len(path))
                         print(path)
                     elif event.key == pygame.K_b:
                         print("BFS search")
                         path = Algorithms.bfs(self.board)
+                        print(len(path))
                         print (path)
                     elif event.key == pygame.K_g:
                         print("Greedy search")
                         path = Algorithms.greedy(self.board)
+                        print(len(path))
                         print (path)
                     elif event.key == pygame.K_a:
                         print("A* algorithm")
                         path = Algorithms.aStar(self.board)
+                        print(len(path))
+                        print (path)
+                    elif event.key == pygame.K_x:
+                        print("Only greedy algorithm")
+                        path = Algorithms.greedySearch(self.board)
+                        print(len(path))
                         print (path)
                     elif event.key == pygame.K_UP :
                         self.board.handleMove(UP)
