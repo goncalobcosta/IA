@@ -38,14 +38,14 @@ class Algorithms:
             return path  
         
         if depth >= limit:
-            return None
+            return []
 
         for nextBoard, direction in nextBoards:
             if nextBoard not in visited:
                 path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + 1, limit)
                 if path_to_win:
                     return path_to_win
-        return None
+        return []
 
     @staticmethod
     def bfs(board, limit=30):
@@ -69,7 +69,7 @@ class Algorithms:
                     queue.append((nextBoard, path + [direction]))
                     visited.append(nextBoard)
 
-        return None
+        return []
     
     @staticmethod
     def greedy(board):
@@ -127,7 +127,7 @@ class Algorithms:
             nextBoards = Algorithms.getNextBoards(currentBoard, visited)
             for b, direction in nextBoards:
                 visited.append(b)
-                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction])
+                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction]) * 2 + currentBoard.closestCircle(MOVE[direction])
                 b.cost = currentBoard.cost + 1
                 b.path = currentBoard.path + [direction]
                 queue.push(b)

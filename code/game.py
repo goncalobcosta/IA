@@ -238,7 +238,6 @@ class Game:
 
     def playGame(self):
 
-        
         self.board = Level(self.level).board
 
         while (True):
@@ -254,10 +253,6 @@ class Game:
                     if event.key == pygame.K_q:
                         self.quit()
                         break
-                    elif event.key == pygame.K_m:
-                        self.play()
-                        self.quit()
-                        break
                     elif event.key == pygame.K_l:
                         self.displayLevels()
                         self.quit()
@@ -266,7 +261,7 @@ class Game:
                         self.resetGame()
                     elif event.key == pygame.K_d:
                         print("DFS search")
-                        path = Algorithms.dfs(self.board)
+                        path = Algorithms.dfs(self.board, [], [], 0, 30)
                         print(len(path))
                         print(path)
                     elif event.key == pygame.K_b:
@@ -275,7 +270,7 @@ class Game:
                         print(len(path))
                         print (path)
                     elif event.key == pygame.K_g:
-                        print("Greedy search")
+                        print("Only Greedy search")
                         path = Algorithms.greedy(self.board)
                         print(len(path))
                         print (path)
@@ -285,7 +280,7 @@ class Game:
                         print(len(path))
                         print (path)
                     elif event.key == pygame.K_x:
-                        print("Only greedy algorithm")
+                        print(" greedy algorithm")
                         path = Algorithms.greedySearch(self.board)
                         print(len(path))
                         print (path)
@@ -297,8 +292,6 @@ class Game:
                         self.board.handleMove(LEFT)
                     elif event.key == pygame.K_RIGHT:
                         self.board.handleMove(RIGHT)
-                    elif event.key == pygame.K_e:
-                        self.board.printStat()
 
             self.board.draw(self.screen)
             self.drawCommands(self.board.name)

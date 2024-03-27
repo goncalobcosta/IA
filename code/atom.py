@@ -61,6 +61,10 @@ class Atom:
     def canConnectTo(self, atom):
         return self.isNextTo(atom) and len(self.connections) < self.boundLimit and len(atom.connections) < atom.boundLimit
         
+    def manhattanDistance(self, atom):
+        return abs(self.pos[0] - atom.pos[0]) + abs(self.pos[1] - atom.pos[1])
+        
+    
     def drawConnection(self, surface, offX, offY, atom, connections):
         direction = (atom.pos[0] - self.pos[0], atom.pos[1] - self.pos[1])
         if (connections == 2):
@@ -86,9 +90,7 @@ class Atom:
             elif direction == RIGHT:
                 pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))
     
-    def manhattanDistance(self, atom):
-        return abs(self.pos[0] - atom.pos[0]) + abs(self.pos[1] - atom.pos[1])
-    
+ 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             if (len(self.connections) != len(other.connections)):

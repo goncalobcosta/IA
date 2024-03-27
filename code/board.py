@@ -198,20 +198,17 @@ class Board:
 
         return distance
 
-    def printStat(self):
-        print("My hero is")
+    def closestCircle(self, move):
+        distance = float('inf')
         for atom in self.hero.atoms:
-            x = []
-            for con in atom.connections:
-                x.append(con.pos)
-            print(atom.pos, x)
-        print("=========")
-        for i in self.compounds:
-            l = []
-            for a in i.atoms:
-                l += [a.pos]
-            print(l)
-        print("=========")
+            atom.pos = atom.pos[0] + move[0], atom.pos[1] + move[1]
+            for circle in self.red.union(self.blue, self.green):
+                d = abs(atom.pos[0] - circle[0]) + abs(atom.pos[1] - circle[1])
+                if (d < distance):
+                    distance = d
+            atom.pos = atom.pos[0] - move[0], atom.pos[1] - move[1]
+
+        return distance
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
