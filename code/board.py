@@ -200,9 +200,12 @@ class Board:
 
     def closestCircle(self, move):
         distance = float('inf')
+        circles = self.red.union(self.blue, self.green)
+        if (len(circles) == 0): return 0
+        
         for atom in self.hero.atoms:
             atom.pos = atom.pos[0] + move[0], atom.pos[1] + move[1]
-            for circle in self.red.union(self.blue, self.green):
+            for circle in circles:
                 d = abs(atom.pos[0] - circle[0]) + abs(atom.pos[1] - circle[1])
                 if (d < distance):
                     distance = d

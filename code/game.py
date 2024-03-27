@@ -9,8 +9,9 @@ import math
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
 LEVELS = 0
-ABOUT = 1
-QUIT = 2
+EXTRA = 1
+ABOUT = 2
+QUIT = 3
 
 class Game:
     def __init__(self):
@@ -24,11 +25,10 @@ class Game:
         self.commandFont = pygame.font.Font("resources/fonts/Quicksand-Regular.ttf", 20)
         self.option = 0
         self.stars = [(random.randint(0, WIDTH), random.randint(0, HEIGHT)) for _ in range(50)]
-    
+        self.offset = 0
 
     def play(self):
-        while True: 
-            self.displayMenu()
+        while True: self.displayMenu()
            
     def drawLevels(self):
         self.screen.fill(WHITE)
@@ -55,9 +55,8 @@ class Game:
 
         pygame.display.flip()
 
-
     def displayLevels(self):
-        self.level = 0
+        self.level = 0 
         self.drawLevels()
         while True:
             for event in pygame.event.get():
@@ -90,18 +89,21 @@ class Game:
         self.screen.fill(WHITE)
         title = self.titleFont.render("SOKOBOND", True, GRAY)
         play = self.playFont.render("play", True, BLACK)
+        extra = self.playFont.render("extra", True, BLACK)
         about = self.playFont.render("about", True, BLACK)
         leave = self.playFont.render("quit", True, BLACK)
   
-        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
-        play_rect = play.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
-        about_rect = about.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
-        leave_ret = leave.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 170))
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3 - 30))
+        play_rect = play.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        extra_rect = extra.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 70))
+        about_rect = about.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 140))
+        leave_ret = leave.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 210))
 
-        pygame.draw.rect(self.screen, BLUE, (350, 308 + self.option * 70, 105, 50))
+        pygame.draw.rect(self.screen, BLUE, (350, 278 + self.option * 70, 105, 50))
 
         self.screen.blit(title, title_rect)
         self.screen.blit(play, play_rect)
+        self.screen.blit(extra, extra_rect)
         self.screen.blit(about, about_rect)
         self.screen.blit(leave, leave_ret)
 
@@ -149,13 +151,13 @@ class Game:
     
     def drawStars(self):
         for star in self.stars:
-            self.draw_star(self.screen, GOLD, star, 5, 10, 5)  # Adjust the parameters as needed
+            self.drawStar(self.screen, GOLD, star, 5, 10, 5)  # Adjust the parameters as needed
 
     def updateStars(self):
         for i in range(len(self.stars)):
             self.stars[i] = (self.stars[i][0] + random.randint(-2, 2), self.stars[i][1] + random.randint(-2, 2))
 
-    def draw_star(self, surface, color, pos, outer_radius, inner_radius, points):
+    def drawStar(self, surface, color, pos, outer_radius, inner_radius, points):
         x, y = pos
         angle = 0
         angle_increment = math.pi * 2 / points
@@ -167,8 +169,14 @@ class Game:
             outer_points.extend([(x + inner_radius * math.cos(angle), y + inner_radius * math.sin(angle))])
             angle += angle_increment
 
-        pygame.draw.circle(surface, GOLD, (x, y), int(inner_radius * 0.6))  # Adjust the factor for the center size
+        pygame.draw.circle(surface, GOLD, (x, y), int(inner_radius * 0.6)) 
         pygame.draw.polygon(surface, color, outer_points, 0)
+
+    def drawHint(self, move):
+        title = self.titleFont.render(move, True, GOLD)
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3 - 145))
+        self.screen.blit(title, title_rect)
+
 
     def drawWin(self):
         self.screen.fill(WHITE)
@@ -216,13 +224,17 @@ class Game:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        self.option = (self.option + 1) % 3
+                        self.option = (self.option + 1) % 4
                         self.drawMenu()
                     elif event.key == pygame.K_UP:
-                        self.option = (self.option - 1) % 3
+                        self.option = (self.option - 1) % 4
                         self.drawMenu()
                     elif event.key == pygame.K_RETURN:
                         if (self.option == LEVELS): 
+                            self.displayLevels()
+                            return
+                        if (self.option == EXTRA): 
+                            self.offset = 10
                             self.displayLevels()
                             return
                         elif (self.option == ABOUT): 
@@ -234,12 +246,12 @@ class Game:
             pygame.display.flip()
             self.clock.tick(60)
     
-    
 
     def playGame(self):
 
-        self.board = Level(self.level).board
-
+        self.board = Level(self.level + self.offset).board
+        useHint = False
+        
         while (True):
 
             if self.board.win() : 
@@ -257,45 +269,57 @@ class Game:
                         self.displayLevels()
                         self.quit()
                         break
+                    elif event.key == pygame.K_m:
+                        self.play()
+                        self.quit()
+                        break
                     elif event.key == pygame.K_r:
                         self.resetGame()
-                    elif event.key == pygame.K_d:
+                    elif event.key == pygame.K_h:
+                        hint = Algorithms.aStar(self.board)
+                        useHint = True
+                    elif event.key == pygame.K_1:
                         print("DFS search")
                         path = Algorithms.dfs(self.board, [], [], 0, 30)
                         print(len(path))
                         print(path)
-                    elif event.key == pygame.K_b:
+                    elif event.key == pygame.K_2:
                         print("BFS search")
                         path = Algorithms.bfs(self.board)
                         print(len(path))
                         print (path)
-                    elif event.key == pygame.K_g:
+                    elif event.key == pygame.K_3:
                         print("Only Greedy search")
                         path = Algorithms.greedy(self.board)
                         print(len(path))
                         print (path)
-                    elif event.key == pygame.K_a:
+                    elif event.key == pygame.K_4:
+                        print("Greedy algorithm")
+                        path = Algorithms.greedySearch(self.board)
+                        print(len(path))
+                        print (path)
+                    elif event.key == pygame.K_5:
                         print("A* algorithm")
                         path = Algorithms.aStar(self.board)
                         print(len(path))
                         print (path)
-                    elif event.key == pygame.K_x:
-                        print(" greedy algorithm")
-                        path = Algorithms.greedySearch(self.board)
-                        print(len(path))
-                        print (path)
                     elif event.key == pygame.K_UP :
+                        useHint = False
                         self.board.handleMove(UP)
                     elif event.key == pygame.K_DOWN:
+                        useHint = False
                         self.board.handleMove(DOWN)
                     elif event.key == pygame.K_LEFT:
+                        useHint = False
                         self.board.handleMove(LEFT)
                     elif event.key == pygame.K_RIGHT:
+                        useHint = False
                         self.board.handleMove(RIGHT)
 
             self.board.draw(self.screen)
             self.drawCommands(self.board.name)
-            
+            if useHint: 
+                self.drawHint(hint[0])
             pygame.display.flip()
             self.clock.tick(60)        
         
@@ -307,6 +331,12 @@ class Game:
         leave = self.commandFont.render("Q : quit", True, DARK_GRAY)
         name = self.nameFont.render(name, True, DARK_GRAY)
 
+        dfs = self.commandFont.render("1 : DFS", True, DARK_GRAY)
+        bfs = self.commandFont.render("2 : BFS", True, DARK_GRAY)
+        greedy = self.commandFont.render("3 : Greedy", True, DARK_GRAY)
+        heuristic = self.commandFont.render("4 : Heuristic", True, DARK_GRAY)
+        aStar = self.commandFont.render("5 : A*", True, DARK_GRAY)
+
         reset_rect = reset.get_rect(topleft=(20, 20))
         hint_rect = hint.get_rect(topleft=(20, 45))
         levels_rect = levels.get_rect(topleft=(20, 70))
@@ -314,12 +344,24 @@ class Game:
         leave_rect = leave.get_rect(topleft=(20, 120))
         name_rect = name.get_rect(bottomleft=(20, 580))
         
+        dfs_rect = dfs.get_rect(bottomleft=(250, 565))
+        bfs_rect = bfs.get_rect(bottomleft=(350, 565))
+        greedy_rect = greedy.get_rect(bottomleft=(440, 565))
+        heuristic_rect = heuristic.get_rect(bottomleft=(550, 565))
+        aStar_rect = aStar.get_rect(bottomleft=(680, 565))
+        
         self.screen.blit(reset, reset_rect)
         self.screen.blit(levels, levels_rect)
         self.screen.blit(menu, menu_rect)
         self.screen.blit(hint, hint_rect)
         self.screen.blit(leave, leave_rect)
         self.screen.blit(name, name_rect)
+        
+        self.screen.blit(dfs, dfs_rect)
+        self.screen.blit(bfs, bfs_rect)
+        self.screen.blit(greedy, greedy_rect)
+        self.screen.blit(heuristic, heuristic_rect)
+        self.screen.blit(aStar, aStar_rect)
         
     def resetGame(self):
         self.board = Level(self.level).board
