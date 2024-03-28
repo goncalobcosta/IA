@@ -323,3 +323,6 @@ class Compound:
 
         compound = self.__class__(atoms, self.isHeroCompound)
         return compound
+    
+    def __hash__(self):
+        return hash((tuple(atom for atom in self.atoms), self.isHeroCompound))

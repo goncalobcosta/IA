@@ -396,7 +396,7 @@ class Game:
                         self.useHint = True
                     elif event.key == pygame.K_1:
                         print("DFS search")
-                        path = Algorithms.dfs(self.board, [], [], 0, 30)
+                        path = Algorithms.dfs(self.board, set(), [], 0, 30)
                         print(path)
                         self.solve(path)
                     elif event.key == pygame.K_2:
