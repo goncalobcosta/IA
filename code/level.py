@@ -329,7 +329,7 @@ class Level:
 
             wallColor = (239, 175, 26)
             
-            return Board(9, 8, walls, blank, hero, compounds, {}, {}, {}, wallColor, "CREATURE")     
+            return Board(9, 8, walls, blank, hero, compounds, set(), set(), set(), wallColor, "CREATURE")     
         elif (self.level == 11):
             h1 = Atom(H, (1, 5))
             h2 = Atom(H, (2, 6))
@@ -371,7 +371,7 @@ class Level:
 
             wallColor = (122, 207, 119)
             
-            return Board(8, 8, walls, blank, hero, compounds, {}, green, {}, wallColor, "LETTUCE")
+            return Board(8, 8, walls, blank, hero, compounds, set(), green, set(), wallColor, "LETTUCE")
         elif (self.level == 12):
             h1 = Atom(H, (1, 1))
             h2 = Atom(H, (1, 6))
@@ -400,7 +400,7 @@ class Level:
             
             wallColor = (255, 210, 82)
             
-            return Board(8, 8, walls, {}, hero, compounds, red, {}, {}, wallColor, "WINGMAN")
+            return Board(8, 8, walls, set(), hero, compounds, red, set(), set(), wallColor, "WINGMAN")
         elif (self.level == 13):
 
             o1 = Atom(O, (1, 5))
@@ -441,7 +441,7 @@ class Level:
 
             wallColor = (94, 197, 228)
 
-            return Board(7, 7, walls, {}, hero, compounds, {}, {}, blue, wallColor, "SNAKE")
+            return Board(7, 7, walls, set(), hero, compounds, set(), set(), blue, wallColor, "SNAKE")
         elif (self.level == 14):
 
             he1 = Atom(He, (4, 1))
@@ -499,7 +499,7 @@ class Level:
                 (0, 7), (1, 7), (6, 7), (7, 7), 
             }
 
-            return Board(8, 8, walls, blank, hero, compounds, {}, {}, {}, wallColor, "CLOUD")
+            return Board(8, 8, walls, blank, hero, compounds, set(), set(), set(), wallColor, "CLOUD")
         elif (self.level == 15):
 
             h1 = Atom(H, (2, 4))
@@ -542,7 +542,7 @@ class Level:
                 (4, 7), (5, 7), (6, 7), (7, 7), (8, 7), (9, 7)
             }
 
-            return Board(10, 8, walls, blank, hero, compounds, red, green, {}, wallColor, "MINE FIELD")
+            return Board(10, 8, walls, blank, hero, compounds, red, green, set(), wallColor, "MINE FIELD")
         elif (self.level == 16):
 
             h1 = Atom(H, (2, 2))
@@ -601,7 +601,7 @@ class Level:
                 (0, 0), (1, 0), (7, 0), (8, 0)
             }
 
-            return Board(9, 10, walls, blank, hero, compounds, {}, {}, {}, wallColor, "SLAM")
+            return Board(9, 10, walls, blank, hero, compounds, set(), set(), set(), wallColor, "SLAM")
         elif (self.level == 17):
 
             h = Atom(H, (2, 7), True)
@@ -640,7 +640,7 @@ class Level:
 
             wallColor = (254, 114, 113)
 
-            return Board(10, 10, walls, blank, hero, compounds, {}, green, {}, wallColor, "APART")
+            return Board(10, 10, walls, blank, hero, compounds, set(), green, set(), wallColor, "APART")
         elif (self.level == 18):
             
             h1 = Atom(H, (5, 1))
@@ -694,7 +694,7 @@ class Level:
 
             wallColor = (92, 93, 95)
 
-            return Board(9, 10, walls, blank, hero, compounds, red, {}, {}, wallColor, "SPACESHIP")
+            return Board(9, 10, walls, blank, hero, compounds, red, set(), set(), wallColor, "SPACESHIP")
         elif (self.level == 19):
 
             h1 = Atom(H, (2, 3))
@@ -733,4 +733,4 @@ class Level:
 
             wallColor = (44, 202, 151)
 
-            return Board(9, 9, walls, {}, hero, compounds, {}, {}, {}, wallColor, "BUTTERFLY")
+            return Board(9, 9, walls, set(), hero, compounds, set(), set(), set(), wallColor, "BUTTERFLY")

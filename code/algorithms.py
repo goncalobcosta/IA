@@ -19,7 +19,17 @@ MOVE = {
 class Algorithms:
 
     @staticmethod
-    def getNextBoards(board, visited=[]):
+    def getNextBoards(board : Board, visited : list[Board]) -> list[Board]:
+        """
+        Generate next possible boards from the current board.
+
+        Parameters:
+        - board (Board): The current board state.
+        - visited (list): A list of visited board states.
+
+        Returns:
+        - nextBoards (list): A list of tuples containing the next possible board states along with their corresponding move directions.
+        """
         nextBoards = []
         for move in DIRECTIONS:
             newBoard = board.copy()
@@ -29,9 +39,21 @@ class Algorithms:
         return nextBoards
 
     @staticmethod
-    def dfs(board, visited=[], path=[], depth=0, limit=30):
+    def dfs(board : Board, visited : list[Board], path : list[str], depth : int, limit : int) -> list[str]:
+        """
+        Depth-first search algorithm to find a winning path on a game board.
 
-        nextBoards = Algorithms.getNextBoards(board)        
+        Parameters:
+        - board (Board): The current board state.
+        - visited (list): A list of visited board states. Defaults to an empty list.
+        - path (list): The current path of moves. Defaults to an empty list.
+        - depth (int): The current depth of the search. Defaults to 0.
+        - limit (int): The maximum depth limit for the search. Defaults to 30.
+
+        Returns:
+        - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found within the limit.
+        """
+        nextBoards = Algorithms.getNextBoards(board, visited)        
         visited.append(board)
 
         if board.win():
@@ -41,14 +63,23 @@ class Algorithms:
             return []
 
         for nextBoard, direction in nextBoards:
-            if nextBoard not in visited:
-                path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + 1, limit)
-                if path_to_win:
-                    return path_to_win
+            path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + 1, limit)
+            if path_to_win:
+                return path_to_win
         return []
 
     @staticmethod
-    def bfs(board, limit=30):
+    def bfs(board : Board, limit : int) -> list[str]:
+        """
+        Breadth-first search algorithm to find a winning path on a game board.
+
+        Parameters:
+        - board (Board): The initial board state.
+        - limit (int): The maximum depth limit for the search.
+
+        Returns:
+        - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found within the limit.
+        """
         visited = []
         queue = deque([(board, [])])
 
@@ -62,18 +93,25 @@ class Algorithms:
             if len(path) >= limit:
                 continue
 
-            nextBoards = Algorithms.getNextBoards(current_board)
+            nextBoards = Algorithms.getNextBoards(current_board, visited)
 
             for nextBoard, direction in nextBoards:
-                if nextBoard not in visited:
-                    queue.append((nextBoard, path + [direction]))
-                    visited.append(nextBoard)
+                queue.append((nextBoard, path + [direction]))
+                visited.append(nextBoard)
 
         return []
     
     @staticmethod
-    def bestFirst(board):
-        
+    def bestFirst(board: Board) -> list[str]:
+        """
+        Best-first search algorithm to find a winning path on a game board.
+
+        Parameters:
+        - board (object): The initial board state.
+
+        Returns:
+        - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
+        """
         visited = []
         path = []
 
@@ -94,7 +132,17 @@ class Algorithms:
             path.append(direction)
                 
     @staticmethod
-    def greedyMove(board, nextBoards):
+    def greedyMove(board : Board, nextBoards : list[tuple[Board, str]]) -> tuple[Board, str]:
+        """
+        Selects the best move based on a greedy strategy for a given game board.
+
+        Parameters:
+        - board (object): The current board state.
+        - nextBoards (list): A list of tuples containing the next possible board states along with their corresponding move directions.
+
+        Returns:
+        - best (tuple): A tuple containing the best board state and its corresponding move direction.
+        """
         bestValue = float('inf')        
         for b, direction in nextBoards:
             value = board.greedyMove(MOVE[direction])
@@ -105,7 +153,16 @@ class Algorithms:
         
         
     @staticmethod
-    def aStar(board):
+    def aStar(board : Board) -> list[str]:
+        """
+        A* search algorithm to find a winning path on a game board.
+
+        Parameters:
+        - board (Board): The initial board state.
+
+        Returns:
+        - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
+        """
         queue = PriorityQueue()
         visited = []
         
@@ -133,7 +190,16 @@ class Algorithms:
     
     
     @staticmethod
-    def greedySearch(board):
+    def greedySearch(board : Board) -> list[str]:
+        """
+        Greedy search algorithm to find a winning path on a game board.
+
+        Parameters:
+        - board (Board): The initial board state.
+
+        Returns:
+        - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
+        """
         queue = PriorityQueue()
         visited = []
         

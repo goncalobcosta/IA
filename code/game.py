@@ -297,7 +297,7 @@ class Game:
                         self.solve(path)
                     elif event.key == pygame.K_2:
                         print("BFS search")
-                        path = Algorithms.bfs(self.board)
+                        path = Algorithms.bfs(self.board, 30)
                         print(path)
                         self.solve(path)
                     elif event.key == pygame.K_3:
