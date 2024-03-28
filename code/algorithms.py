@@ -44,7 +44,7 @@ class Algorithms:
             if nextBoard not in visited:
                 path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + 1, limit)
                 if path_to_win:
-                    return path_to_win
+                    return visited
         return []
 
     @staticmethod
@@ -57,7 +57,7 @@ class Algorithms:
             visited.append(current_board)
 
             if current_board.win():
-                return path
+                return visited
 
             if len(path) >= limit:
                 continue
@@ -78,15 +78,15 @@ class Algorithms:
         path = []
 
         while True:
-            if board.win(): 
-                return path 
-           
             visited.append(board)
+
+            if board.win(): 
+                return visited            
 
             nextBoards = Algorithms.getNextBoards(board, visited)
 
             if nextBoards == []:
-                return []
+                return visited
 
             nextBoard, direction = Algorithms.greedyMove(board, nextBoards)
 
@@ -122,7 +122,7 @@ class Algorithms:
             visited.append(currentBoard)
             
             if currentBoard.win():
-                return currentBoard.path
+                return visited
             
             nextBoards = Algorithms.getNextBoards(currentBoard, visited)
             for b, direction in nextBoards:
@@ -150,7 +150,7 @@ class Algorithms:
             visited.append(currentBoard)
             
             if currentBoard.win():
-                return currentBoard.path
+                return visited
             
             nextBoards = Algorithms.getNextBoards(currentBoard, visited)
             for b, direction in nextBoards:

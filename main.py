@@ -22,20 +22,31 @@ def main():
         board = Level(i).board
         res = "| " + str(i+1) + " | "        
         
-        path = Algorithms.dfs(board, [], [], 0, 30)
-        res += str(len(path)) + " | "
-                    
-        path = Algorithms.bfs(board)
-        res += str(len(path)) + " | "
-                
-        path = Algorithms.bestFirst(board)
-        res += str(len(path)) + " | "
-                   
-        path = Algorithms.greedySearch(board)
-        res += str(len(path)) + " | "
-                    
-        path = Algorithms.aStar(board)
-        res += str(len(path)) + " | "
+        s = time.time()
+        Algorithms.dfs(board, [], [], 0, 30)
+        e = time.time()
+        
+        res += str(e-s) + " | "
+
+        s1 = time.time()
+        Algorithms.bfs(board)
+        e1 = time.time()
+        res += str(e1-s1) + " | "
+       
+        s2 = time.time()  
+        Algorithms.bestFirst(board)
+        e2 = time.time()
+        res += str(e2-s2) + " | "
+        
+        s3 = time.time()  
+        Algorithms.greedySearch(board)
+        e3 = time.time()
+        res += str(e3-s3) + " | "
+         
+        s4 = time.time()     
+        Algorithms.aStar(board)
+        e4 = time.time()
+        res += str(e4-s4) + " | "
         print(res)
 
 

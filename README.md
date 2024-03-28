@@ -55,8 +55,7 @@ Sokobond is a puzzle game where players push atoms around a grid, trying to crea
 - Special thanks to the creators of Sokobond for the inspiration.
 - Thanks to the Pygame community for the robust library that powers the game's graphics and interactions.
 
-
-Solution Cost 
+Solution Cost
 
 | Level | DFS | BFS | Best-First | Greedy | A\* |
 | ----- | --- | --- | ---------- | ------ | --- |
@@ -70,3 +69,17 @@ Solution Cost
 | 8     | 6   | 6   | 0          | 6      | 6   |
 | 9     | 18  | 12  | 0          | 12     | 12  |
 | 10    | 6   | 6   | 0          | 6      | 6   |
+
+State Space explored
+| Level | DFS | BFS | Best-First | Greedy | A\* |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 38 | 118 | 15 | 48 | 99 |
+| 2 | 102 | 142 | 7 | 179 | 106 |
+| 3 | 24 | 140 | 18 | 116 | 128 |
+| 4 | 187 | 652 | 16 | 989 | 566 |
+| 5 | 151 | 766 | 12 | 148 | 619 |
+| 6 | 30 | 374 | 20 | 347 | 249 |
+| 7 | 24 | 287 | 19 | 63 | 181 |
+| 8 | 24 | 44 | 4 | 34 | 38 |
+| 9 | 54 | 507 | 15 | 272 | 470 |
+| 10 | 14 | 46 | 9 | 22 | 37 |
