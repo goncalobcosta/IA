@@ -6,7 +6,7 @@ import time
 
 
 def main():    
-    '''
+    
     game = Game()
     game.play()
     '''
@@ -48,7 +48,7 @@ def main():
         e4 = time.time()
         res += str(e4-s4) + " | "
         print(res)
-
+    '''
 
 if __name__ == "__main__":
     main()

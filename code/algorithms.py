@@ -92,9 +92,6 @@ class Algorithms:
 
             board = nextBoard
             path.append(direction)
-            
-            
-
                 
     @staticmethod
     def greedyMove(board, nextBoards):

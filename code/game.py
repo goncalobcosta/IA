@@ -1,10 +1,12 @@
 import os
 import pygame
 import sys
+import time
 from code.level import * 
 from code.algorithms import *
 import random
 import math 
+
 
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
@@ -66,23 +68,21 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         self.level = (self.level + 5) % 10
-                        self.drawLevels()
                     elif event.key == pygame.K_UP:
                         self.level = (self.level - 5) % 10
-                        self.drawLevels()
                     elif event.key == pygame.K_LEFT:
                         self.level = (self.level - 1) % 10
-                        self.drawLevels()
                     elif event.key == pygame.K_RIGHT:
                         self.level = (self.level + 1) % 10
-                        self.drawLevels()
                     elif event.key == pygame.K_m:
                         self.displayMenu()
                         self.quit()
                     elif event.key == pygame.K_RETURN:
                         self.playGame()
                         return
+            self.drawLevels()
             pygame.display.flip()
+
             self.clock.tick(60)
 
     def drawMenu(self):
@@ -184,33 +184,44 @@ class Game:
 
         title = self.titleFont.render("You Won!", True, GOLD)
         back = self.playFont.render("Level menu", True, BLACK)
+        again = self.playFont.render("Play again", True, BLACK)
         
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3 - 145))
-        back_ret = back.get_rect(center=(WIDTH // 2, HEIGHT // 10 * 9 ))
+        back_ret = back.get_rect(center=(WIDTH // 2 + 150, HEIGHT // 10 * 9 ))
+        again_ret = again.get_rect(center=(WIDTH // 2 - 150, HEIGHT // 10 * 9 ))
 
         self.drawStars() 
 
-        pygame.draw.rect(self.screen, BLUE, (287.5, HEIGHT // 10 * 9 - 30, 220, 65))
+        pygame.draw.rect(self.screen, BLUE, (137.5 + 300 * self.winOption, HEIGHT // 10 * 9 - 30, 220, 65))
 
         self.screen.blit(title, title_rect)
         self.screen.blit(back, back_ret)
+        self.screen.blit(again, again_ret)
 
         pygame.display.flip()
 
     def displayWin(self):
+        
+        self.winOption = 0
+        
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_DOWN or event.key == pygame.K_RIGHT:
+                        self.winOption = (self.winOption + 1) % 2
+                    elif event.key == pygame.K_UP or event.key == pygame.K_LEFT:
+                        self.winOption = (self.winOption - 1) % 2                  
                     if event.key == pygame.K_RETURN:
-                        # Play another
-                        self.displayLevels()
+                        if self.winOption == 0:
+                            self.playGame()
+                        else:
+                            self.displayLevels()
                         return
-
             self.drawWin()
-            self.updateStars()  # Update star positions
+            self.updateStars() 
             pygame.display.flip()
             self.clock.tick(60)
 
@@ -251,7 +262,7 @@ class Game:
     def playGame(self):
 
         self.board = Level(self.level + self.offset).board
-        useHint = False
+        self.useHint = False
         
         while (True):
 
@@ -277,50 +288,49 @@ class Game:
                     elif event.key == pygame.K_r:
                         self.resetGame()
                     elif event.key == pygame.K_h:
-                        hint = Algorithms.aStar(self.board)
-                        useHint = True
+                        path = Algorithms.aStar(self.board)
+                        self.useHint = True
                     elif event.key == pygame.K_1:
                         print("DFS search")
                         path = Algorithms.dfs(self.board, [], [], 0, 30)
-                        print(len(path))
                         print(path)
+                        self.solve(path)
                     elif event.key == pygame.K_2:
                         print("BFS search")
                         path = Algorithms.bfs(self.board)
-                        print(len(path))
-                        print (path)
+                        print(path)
+                        self.solve(path)
                     elif event.key == pygame.K_3:
                         print("Best first search")
                         path = Algorithms.bestFirst(self.board)
-                        print(len(path))
-                        print (path)
+                        print(path)
+                        self.solve(path)
                     elif event.key == pygame.K_4:
                         print("Greedy algorithm")
                         path = Algorithms.greedySearch(self.board)
-                        print(len(path))
-                        print (path)
+                        print(path)
+                        self.solve(path)
                     elif event.key == pygame.K_5:
                         print("A* algorithm")
                         path = Algorithms.aStar(self.board)
-                        print(len(path))
-                        print (path)
+                        print(path)
+                        self.solve(path)
                     elif event.key == pygame.K_UP :
-                        useHint = False
                         self.board.handleMove(UP)
                     elif event.key == pygame.K_DOWN:
-                        useHint = False
+                        self.useHint = False
                         self.board.handleMove(DOWN)
                     elif event.key == pygame.K_LEFT:
-                        useHint = False
+                        self.useHint = False
                         self.board.handleMove(LEFT)
                     elif event.key == pygame.K_RIGHT:
-                        useHint = False
+                        self.useHint = False
                         self.board.handleMove(RIGHT)
 
             self.board.draw(self.screen)
             self.drawCommands(self.board.name)
-            if useHint: 
-                text = 'No solution' if hint == [] else hint[0]
+            if self.useHint: 
+                text = 'No solution' if path == [] else path[0]
                 self.drawHint(text)
             pygame.display.flip()
             self.clock.tick(60)        
@@ -349,8 +359,8 @@ class Game:
         dfs_rect = dfs.get_rect(bottomleft=(250, 565))
         bfs_rect = bfs.get_rect(bottomleft=(350, 565))
         greedy_rect = greedy.get_rect(bottomleft=(440, 565))
-        heuristic_rect = heuristic.get_rect(bottomleft=(550, 565))
-        aStar_rect = aStar.get_rect(bottomleft=(680, 565))
+        heuristic_rect = heuristic.get_rect(bottomleft=(580, 565))
+        aStar_rect = aStar.get_rect(bottomleft=(700, 565))
         
         self.screen.blit(reset, reset_rect)
         self.screen.blit(levels, levels_rect)
@@ -365,6 +375,20 @@ class Game:
         self.screen.blit(heuristic, heuristic_rect)
         self.screen.blit(aStar, aStar_rect)
         
+    def solve(self, path):
+        if path == []:
+            self.useHint = True
+            return
+        for move in path:
+            time.sleep(0.5)
+            self.board.handleMove(MOVE[move])
+            self.screen.fill(WHITE)
+            self.board.draw(self.screen)
+            self.drawCommands(self.board.name)
+            pygame.display.flip()
+        self.displayWin()
+        self.quit()
+    
     def resetGame(self):
         self.board = Level(self.level).board
         
