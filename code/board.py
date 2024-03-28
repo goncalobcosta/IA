@@ -184,6 +184,7 @@ class Board:
 
     def greedyMove(self, move):
         distance = float('inf')
+        if self.compounds == []: return 0
 
         for atom in self.hero.atoms:
             atom.pos = atom.pos[0] + move[0], atom.pos[1] + move[1]
@@ -234,3 +235,4 @@ class Board:
         if (self.cost + self.heuristic_estimate == other.cost + other.heuristic_estimate):
             return self.heuristic_estimate < other.heuristic_estimate
         return self.cost + self.heuristic_estimate < other.cost + other.heuristic_estimate
+    

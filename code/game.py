@@ -231,6 +231,7 @@ class Game:
                         self.drawMenu()
                     elif event.key == pygame.K_RETURN:
                         if (self.option == LEVELS): 
+                            self.offset = 0
                             self.displayLevels()
                             return
                         if (self.option == EXTRA): 
@@ -289,8 +290,8 @@ class Game:
                         print(len(path))
                         print (path)
                     elif event.key == pygame.K_3:
-                        print("Only Greedy search")
-                        path = Algorithms.greedy(self.board)
+                        print("Best first search")
+                        path = Algorithms.bestFirst(self.board)
                         print(len(path))
                         print (path)
                     elif event.key == pygame.K_4:
@@ -319,7 +320,8 @@ class Game:
             self.board.draw(self.screen)
             self.drawCommands(self.board.name)
             if useHint: 
-                self.drawHint(hint[0])
+                text = 'No solution' if hint == [] else hint[0]
+                self.drawHint(text)
             pygame.display.flip()
             self.clock.tick(60)        
         
@@ -333,8 +335,8 @@ class Game:
 
         dfs = self.commandFont.render("1 : DFS", True, DARK_GRAY)
         bfs = self.commandFont.render("2 : BFS", True, DARK_GRAY)
-        greedy = self.commandFont.render("3 : Greedy", True, DARK_GRAY)
-        heuristic = self.commandFont.render("4 : Heuristic", True, DARK_GRAY)
+        greedy = self.commandFont.render("3 : Best First", True, DARK_GRAY)
+        heuristic = self.commandFont.render("4 : Greedy", True, DARK_GRAY)
         aStar = self.commandFont.render("5 : A*", True, DARK_GRAY)
 
         reset_rect = reset.get_rect(topleft=(20, 20))

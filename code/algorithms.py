@@ -72,7 +72,7 @@ class Algorithms:
         return []
     
     @staticmethod
-    def greedy(board):
+    def bestFirst(board):
         
         visited = []
         path = []
@@ -98,7 +98,7 @@ class Algorithms:
                 
     @staticmethod
     def greedyMove(board, nextBoards):
-        bestValue = float('inf')
+        bestValue = float('inf')        
         for b, direction in nextBoards:
             value = board.greedyMove(MOVE[direction])
             if value < bestValue:
@@ -116,7 +116,7 @@ class Algorithms:
         board.heuristic_estimate = 0
         board.path = []
         queue.push(board)
-        
+                
         while not queue.empty():
             currentBoard = queue.pop()            
             visited.append(currentBoard)
@@ -127,12 +127,13 @@ class Algorithms:
             nextBoards = Algorithms.getNextBoards(currentBoard, visited)
             for b, direction in nextBoards:
                 visited.append(b)
-                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction]) * 2 + currentBoard.closestCircle(MOVE[direction])
+                b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction]) + currentBoard.closestCircle(MOVE[direction]) * 0.1 
                 b.cost = currentBoard.cost + 1
                 b.path = currentBoard.path + [direction]
                 queue.push(b)
         
         return []
+    
     
     @staticmethod
     def greedySearch(board):
