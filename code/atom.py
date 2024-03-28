@@ -190,5 +190,5 @@ class Atom:
         else:
             return False
     
-    def __hash__(self):w
+    def __hash__(self):
         return hash((self.name, self.boundLimit, self.pos, self.isHero))
