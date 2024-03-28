@@ -7,7 +7,7 @@ class Compound:
         self.isHeroCompound = isHeroCompound
         self.visited = False
         
-    def dfsDraw(self, surface, offX : int, offY : int, atom : Atom):
+    def dfsDraw(self, surface, offX, offY, atom):
         """
         Perform depth-first search to draw connections between atoms in the compound.
 
@@ -23,7 +23,7 @@ class Compound:
             if not neighbour.visited:
                 self.dfsDraw(surface, offX, offY, neighbour)
         
-    def draw(self, surface, offX : int, offY : int):
+    def draw(self, surface, offX, offY):
         """
         Draw the compound on a given surface.
 
@@ -38,7 +38,7 @@ class Compound:
         for atom in self.atoms:
             atom.draw(surface, offX, offY)
        
-    def addAtom(self, atom : Atom):
+    def addAtom(self, atom):
         """
         Add an atom to the compound.
 
@@ -47,7 +47,7 @@ class Compound:
         """
         self.atoms.append(atom)
         
-    def isInPosition(self, pos : tuple[int, int]) -> bool:
+    def isInPosition(self, pos):
         """
         Check if any atom in the compound is in a given position.
 
@@ -59,7 +59,7 @@ class Compound:
         """
         return any(atom.isInPosition(pos) for atom in self.atoms)
         
-    def move(self, move : tuple[int, int]):
+    def move(self, move):
         """
         Move the compound by a given displacement.
 
@@ -70,7 +70,7 @@ class Compound:
             atom.pos = (atom.pos[0] + move[0], atom.pos[1] + move[1])
         self.checkConnections()
             
-    def connect(self, src : Atom, dest : Atom):
+    def connect(self, src, dest):
         """
         Connect two atoms within the compound bidirectionally.
 
@@ -98,7 +98,7 @@ class Compound:
                    res.append((atom, atom2))
         return res
         
-    def push(self, move : tuple[int, int]):
+    def push(self, move):
         """
         Move all atoms in the compound by a given displacement.
 
@@ -108,7 +108,7 @@ class Compound:
         for atom in self.atoms:
             atom.move(move)
           
-    def addConnection(self, atom1 : Atom, atom2 : Atom):
+    def addConnection(self, atom1, atom2):
         """
         Add a connection between two atoms within the compound if their connection limits allow.
 
@@ -119,7 +119,7 @@ class Compound:
         if len(atom1.connections) < atom1.boundLimit and len(atom2.connections) < atom2.boundLimit:
             self.connect(atom1, atom2)
     
-    def removeConnection(self, atom1 : Atom, atom2 : Atom):
+    def removeConnection(self, atom1, atom2):
         """
         Remove a connection between two atoms within the compound.
 
@@ -131,7 +131,7 @@ class Compound:
             atom1.disconnect(atom2)
             atom2.disconnect(atom1)   
             
-    def getCandidates(self, move : tuple[int, int], pos : tuple[int, int]) -> list[tuple[list, list]]:
+    def getCandidates(self, move, pos):
         """
         Get candidate atoms for connection based on a given move direction and position.
 
@@ -156,7 +156,7 @@ class Compound:
             return upRight, downRight
         return upLeft, downLeft
     
-    def dfs(self, atom : Atom):
+    def dfs(self, atom):
         """
         Perform depth-first search on atoms starting from a given atom.
 
@@ -185,7 +185,7 @@ class Compound:
         
         return isolated
     
-    def reconnect(self, connections : list[tuple[Atom, Atom]]):
+    def reconnect(self, connections):
         """
         Reconnect atoms based on a list of connections.
 
@@ -196,7 +196,7 @@ class Compound:
             atom1, atom2 = connection
             self.connect(atom1, atom2)
             
-    def rotate(self, move : tuple[int, int]):
+    def rotate(self, move):
         """
         Rotate non-hero atoms in the compound based on a given move direction.
 
@@ -211,7 +211,7 @@ class Compound:
                 x, y = self.atoms[i-1].pos
                 atom.pos = (x-dx, y-dy)
     
-    def dfsSnake(self, atom : Atom, current_path : list[Atom]):
+    def dfsSnake(self, atom, current_path):
         """
         Perform depth-first search to construct a snake-like path within the compound.
 
@@ -232,7 +232,7 @@ class Compound:
 
         return current_path
 
-    def isSnake(self) -> bool:
+    def isSnake(self):
         """
         Check if the compound forms a snake-like path.
 
@@ -260,7 +260,7 @@ class Compound:
             if(atom1.canConnectTo(atom2) and (atom2 not in atom1.connections)):
                 self.connect(atom1,atom2)
 
-    def fullyConnected(self) -> bool:
+    def fullyConnected(self):
         """
         Check if all atoms in the compound are fully connected.
 
@@ -272,7 +272,7 @@ class Compound:
                 return False
         return True
     
-    def distance(self, other) -> int:
+    def distance(self, other):
         """
         Calculate the minimum Manhattan distance between this compound and another compound.
 

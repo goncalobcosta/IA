@@ -22,7 +22,7 @@ class PriorityQueue:
         """
         return heapq.heappop(self._queue)[1]
     
-    def empty(self) -> bool:
+    def empty(self):
         """
         Check if the priority queue is empty.
 

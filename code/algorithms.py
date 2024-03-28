@@ -19,7 +19,7 @@ MOVE = {
 class Algorithms:
 
     @staticmethod
-    def getNextBoards(board : Board, visited : set[Board]) -> list[Board]:
+    def getNextBoards(board, visited):
         """
         Generate next possible boards from the current board.
 
@@ -39,7 +39,7 @@ class Algorithms:
         return nextBoards
 
     @staticmethod
-    def dfs(board : Board, visited : set[Board], path : list[str], depth : int, limit : int) -> list[str]:
+    def dfs(board, visited, path, depth, limit):
         """
         Depth-first search algorithm to find a winning path on a game board.
 
@@ -69,7 +69,7 @@ class Algorithms:
         return []
 
     @staticmethod
-    def bfs(board : Board, limit : int) -> list[str]:
+    def bfs(board, limit):
         """
         Breadth-first search algorithm to find a winning path on a game board.
 
@@ -101,7 +101,7 @@ class Algorithms:
         return []
         
     @staticmethod
-    def greedyMove(board : Board, nextBoards : list[tuple[Board, str]]) -> tuple[Board, str]:
+    def greedyMove(board , nextBoards):
         """
         Selects the best move based on a greedy strategy for a given game board.
 
@@ -121,7 +121,7 @@ class Algorithms:
         return best
 
     @staticmethod
-    def bestFirst(board: Board) -> list[str]:
+    def bestFirst(board):
         """
         Best-first search algorithm to find a winning path on a game board.
 
@@ -151,7 +151,7 @@ class Algorithms:
             path.append(direction)
                 
     @staticmethod
-    def greedySearch(board : Board) -> list[str]:
+    def greedySearch(board):
         """
         Greedy search algorithm to find a winning path on a game board.
 
@@ -186,7 +186,7 @@ class Algorithms:
         return []
        
     @staticmethod
-    def aStar(board : Board) -> list[str]:
+    def aStar(board):
         """
         A* search algorithm to find a winning path on a game board.
 

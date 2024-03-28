@@ -36,7 +36,7 @@ class Board:
         path = "resources/images/circles/blue_circle.png"
         self.blueCircle = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (18, 18))
         
-    def inBoard(self, pos : tuple[int, int]) -> bool:
+    def inBoard(self, pos):
         """
         Check if a position is inside the board.
 
@@ -48,7 +48,7 @@ class Board:
         """
         return (0 <= pos[0] < self.width and 0 <= pos[1] < self.height) and (pos not in self.blank) and (pos not in self.walls)
    
-    def canMove(self, move : tuple[int, int], compound : Compound) -> bool:
+    def canMove(self, move, compound : Compound):
         """
         Check if a compound can make a move.
 
@@ -71,7 +71,7 @@ class Board:
                     return False
         return True
     
-    def breakConnections(self, move : tuple[int, int]) -> tuple[list[Atom], list[Atom]]:
+    def breakConnections(self, move):
         """
         Break the connections between atoms after a move.
 
@@ -100,7 +100,7 @@ class Board:
                         self.compounds.append(newCompound)
         return connections, newCompounds
     
-    def reconnectCompounds(self, compounds : list[Compound]):
+    def reconnectCompounds(self, compounds):
         """
         Reconnect the compounds broken during the game.
 
@@ -111,7 +111,7 @@ class Board:
             oldCompound.atoms += newCompound.atoms
             self.compounds.remove(newCompound)
 
-    def handleMove(self, move : tuple[int, int]) -> bool:
+    def handleMove(self, move):
         """
         Handle the movement of the hero atom.
 
@@ -145,7 +145,7 @@ class Board:
         
         return True
          
-    def handleGreenCircles(self, move : tuple[int, int]):
+    def handleGreenCircles(self, move):
         """
         Handle the effects of green circles after a move.
 
@@ -159,7 +159,7 @@ class Board:
                 if (atom1 != [] and atom2 != []):
                     compound.addConnection(atom1[0], atom2[0])
 
-    def handleBlueCircles(self, move : tuple[int, int]):
+    def handleBlueCircles(self, move):
         """
         Handle the effects of blue circles after a move.
 
@@ -178,7 +178,7 @@ class Board:
                 self.hero.rotate(move)
                 return
 
-    def handlePushes(self, move : tuple[int, int], compound : Compound):
+    def handlePushes(self, move, compound):
         """
         Recursively handle the pushing of atoms in the specified direction.
 
@@ -214,7 +214,7 @@ class Board:
                     removed.append(compound2)
                     self.compounds.remove(compound2)
         
-    def win(self) -> bool:
+    def win(self):
         """
         Check if all compounds are fully connected, indicating a win condition.
 
@@ -227,7 +227,7 @@ class Board:
                 return False
         return True
 
-    def greedyMove(self, move : tuple[int, int]) -> int:
+    def greedyMove(self, move):
         """
         Calculate the greedy move based on the distance between the hero compound and other compounds.
 
@@ -253,7 +253,7 @@ class Board:
 
         return distance
 
-    def closestCircle(self, move : tuple[int, int]) -> int:
+    def closestCircle(self, move):
         """
         Calculate the distance from the hero compound to the closest circle.
 

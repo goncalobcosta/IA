@@ -20,7 +20,7 @@ DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
 
 class Atom:
-    def __init__(self, atom : tuple[str, int], pos : tuple[int, int], isHero: bool = False):
+    def __init__(self, atom, pos, isHero = False):
         self.name, self.boundLimit, = atom
         self.pos = pos
         self.connections = []
@@ -29,7 +29,7 @@ class Atom:
         path = "resources/images/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
 
-    def draw(self, surface, offX : int, offY : int):
+    def draw(self, surface, offX, offY):
         """
         Draw the atom on a given surface.
 
@@ -68,7 +68,7 @@ class Atom:
         self.connections.remove(atom)
         self.updateImage()
     
-    def move(self, move : tuple[int, int]):
+    def move(self, move):
         """
         Move the atom by a given displacement.
 
@@ -77,7 +77,7 @@ class Atom:
         """
         self.pos = (self.pos[0] + move[0], self.pos[1] + move[1])
     
-    def isInPosition(self, pos : tuple[int, int]) -> bool:
+    def isInPosition(self, pos):
         """
         Check if the atom is in a given position.
 
@@ -89,7 +89,7 @@ class Atom:
         """
         return self.pos == pos
     
-    def isNextTo(self, atom) -> bool:
+    def isNextTo(self, atom):
         """
         Check if the atom is next to another atom.
 
@@ -105,7 +105,7 @@ class Atom:
         if (y1 == y2 and abs(x1 - x2) == 1): return True
         return False
     
-    def canConnectTo(self, atom) -> bool:
+    def canConnectTo(self, atom):
         """
         Check if the atom can connect to another atom.
 
@@ -117,7 +117,7 @@ class Atom:
         """
         return self.isNextTo(atom) and len(self.connections) < self.boundLimit and len(atom.connections) < atom.boundLimit
         
-    def manhattanDistance(self, atom) -> int:
+    def manhattanDistance(self, atom):
         """
         Calculate the Manhattan distance between the atom and another atom.
 
@@ -129,7 +129,7 @@ class Atom:
         """
         return abs(self.pos[0] - atom.pos[0]) + abs(self.pos[1] - atom.pos[1])
         
-    def drawConnection(self, surface, offX : int, offY : int, atom, connections : int):
+    def drawConnection(self, surface, offX, offY, atom, connections):
         """
         Draw a connection line between the atom and another atom on a surface.
 
