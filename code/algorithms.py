@@ -45,7 +45,7 @@ class Algorithms:
 
         Parameters:
         - board (Board): The current board state.
-        - visited (list): A list of visited board states. Defaults to an empty list.
+        - visited (set): A set of visited board states. Defaults to an empty list.
         - path (list): The current path of moves. Defaults to an empty list.
         - depth (int): The current depth of the search. Defaults to 0.
         - limit (int): The maximum depth limit for the search. Defaults to 30.
@@ -80,12 +80,11 @@ class Algorithms:
         Returns:
         - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found within the limit.
         """
-        visited = set()
+        visited = {board}
         queue = deque([(board, [])])
 
         while queue:
             current_board, path = queue.popleft()
-            visited.add(current_board)
 
             if current_board.win():
                 return path
@@ -98,7 +97,7 @@ class Algorithms:
             for nextBoard, direction in nextBoards:
                 queue.append((nextBoard, path + [direction]))
                 visited.add(nextBoard)
-
+            
         return []
         
     @staticmethod
@@ -107,7 +106,7 @@ class Algorithms:
         Selects the best move based on a greedy strategy for a given game board.
 
         Parameters:
-        - board (object): The current board state.
+        - board (Board): The current board state.
         - nextBoards (list): A list of tuples containing the next possible board states along with their corresponding move directions.
 
         Returns:
@@ -127,19 +126,19 @@ class Algorithms:
         Best-first search algorithm to find a winning path on a game board.
 
         Parameters:
-        - board (object): The initial board state.
+        - board (Board): The initial board state.
 
         Returns:
         - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
         """
-        visited = []
+        visited = set()
         path = []
 
         while True:
             if board.win(): 
                 return path 
            
-            visited.append(board)
+            visited.add(board)
 
             nextBoards = Algorithms.getNextBoards(board, visited)
 
@@ -163,7 +162,7 @@ class Algorithms:
         - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
         """
         queue = PriorityQueue()
-        visited = set()
+        visited = {board}
         
         board.cost = 0
         board.heuristic_estimate = 0
@@ -171,8 +170,7 @@ class Algorithms:
         queue.push(board)
         
         while not queue.empty():
-            currentBoard = queue.pop()            
-            visited.add(currentBoard)
+            currentBoard = queue.pop()    
             
             if currentBoard.win():
                 return currentBoard.path
@@ -199,7 +197,7 @@ class Algorithms:
         - path_to_win (list): A list of move directions leading to a winning state, or an empty list if no winning path is found.
         """
         queue = PriorityQueue()
-        visited = set()
+        visited = {board}
         
         board.cost = 0
         board.heuristic_estimate = 0
@@ -208,7 +206,6 @@ class Algorithms:
                 
         while not queue.empty():
             currentBoard = queue.pop()            
-            visited.add(currentBoard)
             
             if currentBoard.win():
                 return currentBoard.path
