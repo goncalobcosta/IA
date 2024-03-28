@@ -20,7 +20,7 @@ DIRECTIONS = [UP, DOWN, LEFT, RIGHT]
 
 
 class Atom:
-    def __init__(self, atom, pos, isHero = False):
+    def __init__(self, atom : tuple[str, int], pos : tuple[int, int], isHero: bool = False):
         self.name, self.boundLimit, = atom
         self.pos = pos
         self.connections = []
@@ -29,43 +29,117 @@ class Atom:
         path = "resources/images/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
 
-    def draw(self, surface, offX, offY):
+    def draw(self, surface, offX : int, offY : int):
+        """
+        Draw the atom on a given surface.
+
+        Parameters:
+        - surface: The surface on which to draw the atom.
+        - offX (int): Offset in the x-direction.
+        - offY (int): Offset in the y-direction.
+        """
         x, y = self.pos
         surface.blit(self.image, ((WIDTH - offX * SQUARE) // 2 + x*SQUARE, ((HEIGHT - offY * SQUARE) // 2 + y*SQUARE)))
     
     def updateImage(self):
+        """
+        Update the atom image based on its connections.
+        """
         path = "resources/images/atoms/" + self.name + "/" + ("hero" if self.isHero else self.name) + str(self.boundLimit - len(self.connections)) + ".png"
         self.image = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), (50, 50))
         
     def connect(self, atom):
+        """
+        Connect the atom to another atom.
+
+        Parameters:
+        - atom (Atom): The atom to connect to.
+        """
         self.connections.append(atom)
         self.updateImage()
     
     def disconnect(self, atom):
+        """
+        Disconnect the atom from another atom.
+
+        Parameters:
+        - atom (Atom): The atom to disconnect from.
+        """
         self.connections.remove(atom)
         self.updateImage()
     
-    def move(self, move):
+    def move(self, move : tuple[int, int]):
+        """
+        Move the atom by a given displacement.
+
+        Parameters:
+        - move (tuple): A tuple containing the displacement in the x and y directions.
+        """
         self.pos = (self.pos[0] + move[0], self.pos[1] + move[1])
     
-    def isInPosition(self, pos):
+    def isInPosition(self, pos : tuple[int, int]) -> bool:
+        """
+        Check if the atom is in a given position.
+
+        Parameters:
+        - pos (tuple): A tuple containing the position coordinates to check.
+
+        Returns:
+        - bool: True if the atom is in the given position, False otherwise.
+        """
         return self.pos == pos
     
-    def isNextTo(self, atom):
+    def isNextTo(self, atom) -> bool:
+        """
+        Check if the atom is next to another atom.
+
+        Parameters:
+        - atom (Atom): The atom to check adjacency with.
+
+        Returns:
+        - bool: True if the atom is adjacent to the other atom, False otherwise.
+        """
         x1, y1 = self.pos
         x2, y2 = atom.pos
         if (x1 == x2 and abs(y1 - y2) == 1): return True
         if (y1 == y2 and abs(x1 - x2) == 1): return True
         return False
     
-    def canConnectTo(self, atom):
+    def canConnectTo(self, atom) -> bool:
+        """
+        Check if the atom can connect to another atom.
+
+        Parameters:
+        - atom (Atom): The atom to check connectivity with.
+
+        Returns:
+        - bool: True if the atom can connect to the other atom, False otherwise.
+        """
         return self.isNextTo(atom) and len(self.connections) < self.boundLimit and len(atom.connections) < atom.boundLimit
         
-    def manhattanDistance(self, atom):
+    def manhattanDistance(self, atom) -> int:
+        """
+        Calculate the Manhattan distance between the atom and another atom.
+
+        Parameters:
+        - atom (Atom): The other atom.
+
+        Returns:
+        - int: The Manhattan distance between the two atoms.
+        """
         return abs(self.pos[0] - atom.pos[0]) + abs(self.pos[1] - atom.pos[1])
         
-    
-    def drawConnection(self, surface, offX, offY, atom, connections):
+    def drawConnection(self, surface, offX : int, offY : int, atom, connections : int):
+        """
+        Draw a connection line between the atom and another atom on a surface.
+
+        Parameters:
+        - surface: The surface on which to draw the connection line.
+        - offX (int): Offset in the x-direction.
+        - offY (int): Offset in the y-direction.
+        - atom (Atom): The other atom to connect to.
+        - connections (int): Number of connections between the atoms.
+        """
         direction = (atom.pos[0] - self.pos[0], atom.pos[1] - self.pos[1])
         if (connections == 2):
             if direction == UP:
@@ -90,8 +164,16 @@ class Atom:
             elif direction == RIGHT:
                 pygame.draw.rect(surface, (0,0,0), ((WIDTH - offX * SQUARE) // 2 + self.pos[0]*SQUARE + 22, ((HEIGHT - offY * SQUARE) // 2 + self.pos[1]*SQUARE + 22), 50, 5))
     
- 
     def __eq__(self, other):
+        """
+        Check if the atom is equal to another atom.
+
+        Parameters:
+        - other (Atom): The other atom.
+
+        Returns:
+        - bool: True if the two atoms are equal, False otherwise.
+        """
         if isinstance(other, self.__class__):
             if (len(self.connections) != len(other.connections)):
                 return False
