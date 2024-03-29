@@ -7,16 +7,19 @@
 - [Sokobond with heuristic Search Methods](#sokobond-with-heuristic-search-methods)
   - [Summary](#summary)
   - [Installation and usage](#installation-and-usage)
-  - [Features](#features)
+  - [Game Controls](#game-controls)
+  - [Algorithms controls](#algorithms-controls)
+  - [Hint - AI Assistance](#hint---ai-assistance)
   - [Definition of the game](#definition-of-the-game)
   - [Formulation of the problem as a search problem](#formulation-of-the-problem-as-a-search-problem)
-  - [Game Controls](#game-controls)
-  - [Hint - AI Assistance](#hint---ai-assistance)
-  - [Algorithms controls](#algorithms-controls)
-  - [Contributing:](#contributing)
-  - [Credits:](#credits)
-  - [License:](#license)
-  - [Acknowledgments:](#acknowledgments)
+  - [Uninformed search methods](#uninformed-search-methods)
+    - [Depth-First Search (DFS)](#depth-first-search-dfs)
+    - [Breadth-First Search (BFS)](#breadth-first-search-bfs)
+  - [Informed search methods](#informed-search-methods)
+    - [Best-first Search](#best-first-search)
+    - [Greedy Algorithm](#greedy-algorithm)
+    - [A\* Algorithm](#a-algorithm)
+  - [Credits](#credits)
 
 
 ## Summary
@@ -24,7 +27,6 @@
 The project focuses on developing heuristic search methods for solving one-player solitaire games, with **Sokobond** being the chosen game for implementation. Utilizing Python along with the Pygame library, the project aims to provide both a playable solitaire game for human players and an automated solver capable of tackling various levels of Sokobond puzzles.
 
 In addition to creating an engaging gaming experience, the project emphasizes the implementation of heuristic search algorithms for solving Sokobond puzzles efficiently. Special attention is given to comparing different uninformed search methods to evaluate their effectiveness in solving the game's puzzles.
-
 
 By combining game development with artificial intelligence techniques, the project provides a platform for exploring and understanding heuristic search methods in the context of puzzle-solving games. Through experimentation and analysis, the project aims to shed light on the strengths and limitations of various search algorithms in tackling challenging solitaire game scenarios.
 
@@ -35,9 +37,38 @@ By combining game development with artificial intelligence techniques, the proje
 3. Download the Sokobond game files from the repository.
 4. Run the game script using Python: `python sokobond.py`.
 
-## Features
+## Game Controls
+
+<div style="text-align: center;">
+    <img src="resources/images/game.png" style="height:400px;" alt="sokobond">
+</div>
+
+- **Movement** : Use the arrow keys to move the hero atom.
+- **Reset Level** : Press the '**R**' key.
+- **Hint** : Press the '**H**' key.
+- **Level Menu** : Press the '**L**' key.
+- **Main Menu**: Press the '**M**' key.
+- **Quit Game** : Press the '**Q**' key.
 
 
+## Algorithms controls
+
+- **Depth-First Search** : Press the '**1**' key.
+- **Breadth-First Search** : Press the '**2**' key.
+- **Best-first Search** : Press the '**3**' key.
+- **Greedy Algorithm**: Press the '**4**' key.
+- **A* Algorithm** : Press the '**5**' key.
+    
+After selecting the algorithm, the AI assistant will automatically solve the level, displaying the chosen solution step by step.
+
+## Hint - AI Assistance
+
+<div style="text-align: center;">
+    <img src="resources/images/hint.png" style="height:400px;" alt="hint">
+</div>
+
+- The AI component provides hints and solutions to help you progress through challenging puzzles, using the A* algorithm.
+- Press the 'H' key to activate AI assistance, and it will suggest the next move.
 
 ## Definition of the game
 
@@ -76,49 +107,164 @@ There are also 3 powerups in the game:
 - **Solution Cost** : Total number of moves required to reach the objective test.
   
 
-## Game Controls
+## Uninformed search methods 
 
-- **Movement** : Use the arrow keys to move the hero atom.
-- **Reset Level** : Press the '**R**' key.
-- **Hint** : Press the '**H**' key.
-- **Level Menu** : Press the '**L**' key.
-- **Main Menu**: Press the '**M**' key.
-- **Quit Game** : Press the '**Q**' key.
+### Depth-First Search (DFS)
 
+In DFS, the algorithm traverses depth-wise from the root node to the furthest node possible, exploring each branch completely before moving on to the next branch. This search method is implemented with a depth limit of 30, ensuring that the search does not continue indefinitely and providing a balance between exploration and efficiency.
 
-## Hint - AI Assistance
+```py
+def dfs(board, visited, path, depth, limit):
+    nextBoards = Algorithms.getNextBoards(board, visited)        
+    visited.add(board)
 
-- The AI component provides hints and solutions to help you progress through challenging puzzles, using the A* algorithm.
-- Press the 'H' key to activate AI assistance, and it will suggest the next move.
-
-## Algorithms controls
-
-- **Depth-First Search** : Press the '**1**' key.
-- **Breadth-First Search** : Press the '**2**' key.
-- **Best-first Search** : Press the '**3**' key.
-- **Greedy Algorithm**: Press the '**4**' key.
-- **A* Algorithm** : Press the '**5**' key.
+    if board.win():
+        return path  
     
-After selecting the algorithm, the AI assistant will automatically solve the level, displaying the chosen solution step by step.
+    if depth >= limit:
+        return []
 
-## Contributing:
+    for nextBoard, direction in nextBoards:
+        path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + 1, limit)
+        if path_to_win:
+            return path_to_win
+    return []
+```
+### Breadth-First Search (BFS)
 
-- Contributions to the project are welcome! Fork the repository, make your changes, and submit a pull request.
-- Bug reports and feature requests can be submitted via the issue tracker on the repository.
+In BFS, we systematically explore all the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. Thus, the graph is explored level by level, starting from the root node, and moves outward in a breadth-wise manner. By implementing BFS with a depth limit of 30, the algorithm ensures efficient exploration while avoiding infinite loops and unnecessary computational overhead.
 
-## Credits:
+```py
+def bfs(board, limit):
+    visited = {board}
+    queue = deque([(board, [])])
+
+    while queue:
+        current_board, path = queue.popleft()
+
+        if current_board.win():
+            return path
+
+        if len(path) >= limit:
+            continue
+
+        nextBoards = Algorithms.getNextBoards(current_board, visited)
+
+        for nextBoard, direction in nextBoards:
+            queue.append((nextBoard, path + [direction]))
+            visited.add(nextBoard)
+        
+    return []
+```
+
+## Informed search methods  
+
+### Best-first Search
+
+In best-first search, we explored the search space by selecting the most promising node according to a heuristic function. In our implementation, we utilized the nearest neighbor heuristic, which prioritizes nodes based on their proximity to the goal state. 
+
+However, it's important to note that this algorithm may not always lead to a solution due to the inherent complexity of the Sokobond game.
+
+```py
+def bestFirst(board):
+    visited = set()
+    path = []
+
+    while True:
+        if board.win(): 
+            return path 
+        
+        visited.add(board)
+
+        nextBoards = Algorithms.getNextBoards(board, visited)
+
+        if nextBoards == []:
+            return []
+
+        nextBoard, direction = Algorithms.greedyMove(board, nextBoards)
+
+        board = nextBoard
+        path.append(direction)
+```
+
+### Greedy Algorithm
+
+The greedy algorithm prioritizes nodes based solely on heuristic information without considering the actual cost of reaching the current position. In our implementation, the cost function (g(n)) for the Greedy Algorithm is always set to 0. 
+
+This means that the algorithm makes decisions solely based on the heuristic function, which can lead to suboptimal solutions but may be computationally more efficient.
+
+```py
+def greedySearch(board):
+    queue = PriorityQueue()
+    visited = {board}
+    
+    board.cost = 0
+    board.heuristic_estimate = 0
+    board.path = []
+    queue.push(board)
+    
+    while not queue.empty():
+        currentBoard = queue.pop()    
+        
+        if currentBoard.win():
+            return currentBoard.path
+        
+        nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+        for b, direction in nextBoards:
+            visited.add(b)
+            b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction])
+            b.cost = 0
+            b.path = currentBoard.path + [direction]
+            queue.push(b)
+        
+    return []
+```
+
+### A* Algorithm
+
+A* algorithm combines the benefits of both uniform-cost search and heuristic search. It evaluates nodes based on the sum of two functions: the actual cost *g(n)*, which represents the number of moves to reach the current position, and the heuristic function *h(n)*, which estimates the cost to reach the nearest free atom. 
+
+In our implementation, the heuristic function *h(n)* calculation was designed to consider both the proximity to free atoms and the distance to the closest powerups, assigning them different weights to prioritize connecting atoms first. Specifically, the heuristic function was defined as:
+
+```py
+h(n) = distance_to_closest_atom() + 0.1 * distance_to_closest_circle()
+```
+
+This approach allowed the algorithm to balance the importance of forming connections between atoms while also considering the potential benefit of reaching powerups. By adjusting the weights, we aimed to optimize the search strategy for efficiently solving Sokobond puzzles, particularly those involving powerup utilization.
+
+```py
+def aStar(board):
+    queue = PriorityQueue()
+    visited = {board}
+    
+    board.cost = 0
+    board.heuristic_estimate = 0
+    board.path = []
+    queue.push(board)
+            
+    while not queue.empty():
+        currentBoard = queue.pop()            
+        
+        if currentBoard.win():
+            return currentBoard.path
+        
+        nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+        for b, direction in nextBoards:
+            visited.add(b)
+            b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction]) + currentBoard.closestCircle(MOVE[direction]) * 0.1 
+            b.cost = currentBoard.cost + 1
+            b.path = currentBoard.path + [direction]
+            queue.push(b)
+    
+    return []
+```
+
+
+## Credits
 
 - Developed by [Your Name or Team Name].
 - Powered by Pygame and Python.
 
-## License:
-
-- This game is released under the [License Name], allowing for free distribution and modification.
-
-## Acknowledgments:
-
-- Special thanks to the creators of Sokobond for the inspiration.
-- Thanks to the Pygame community for the robust library that powers the game's graphics and interactions.
 
 | Level | DFS | BFS | Best-First | Greedy | A\* |
 | ----- | --- | --- | ---------- | ------ | --- |
