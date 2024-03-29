@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Report</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="sokobond-with-heuristic-search-methods">Sokobond with heuristic Search Methods</h1>
+<div style="text-align: center;">
+    <img src="resources/images/sokobond.png" style="height:400px;" alt="sokobond">
+</div>
+<ul>
+<li><a href="#sokobond-with-heuristic-search-methods">Sokobond with heuristic Search Methods</a>
+<ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#installation-and-usage">Installation and usage</a></li>
+<li><a href="#game-controls">Game Controls</a></li>
+<li><a href="#algorithms-controls">Algorithms controls</a></li>
+<li><a href="#hint---ai-assistance">Hint - AI Assistance</a></li>
+<li><a href="#definition-of-the-game">Definition of the game</a></li>
+<li><a href="#formulation-of-the-problem-as-a-search-problem">Formulation of the problem as a search problem</a></li>
+<li><a href="#uninformed-search-methods">Uninformed search methods</a>
+<ul>
+<li><a href="#depth-first-search-dfs">Depth-First Search (DFS)</a></li>
+<li><a href="#breadth-first-search-bfs">Breadth-First Search (BFS)</a></li>
+</ul>
+</li>
+<li><a href="#informed-search-methods">Informed search methods</a>
+<ul>
+<li><a href="#best-first-search">Best-first Search</a></li>
+<li><a href="#greedy-algorithm">Greedy Algorithm</a></li>
+<li><a href="#a-algorithm">A* Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#results-and-analysis">Results and analysis</a>
+<ul>
+<li><a href="#execution-time">Execution time</a></li>
+<li><a href="#solution-quality">Solution Quality</a></li>
+<li><a href="#state-space-explored">State space explored</a></li>
+</ul>
+</li>
+<li><a href="#conclusions">Conclusions</a></li>
+<li><a href="#authors">Authors</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>The project focuses on developing heuristic search methods for solving one-player solitaire games, with <strong>Sokobond</strong> being the chosen game for implementation. Utilizing Python along with the Pygame library, the project aims to provide both a playable solitaire game for human players and an automated solver capable of tackling various levels of Sokobond puzzles.</p>
+<p>In addition to creating an engaging gaming experience, the project emphasizes the implementation of heuristic search algorithms for solving Sokobond puzzles efficiently. Special attention is given to comparing different uninformed search methods to evaluate their effectiveness in solving the game's puzzles.</p>
+<p>By combining game development with artificial intelligence techniques, the project provides a platform for exploring and understanding heuristic search methods in the context of puzzle-solving games. Through experimentation and analysis, the project aims to shed light on the strengths and limitations of various search algorithms in tackling challenging solitaire game scenarios.</p>
+<h2 id="installation-and-usage">Installation and usage</h2>
+<ol>
+<li>Ensure you have Python installed on your system.</li>
+<li>Install the Pygame library using pip: <code>pip install pygame</code>.</li>
+<li>Download the Sokobond game files from the repository.</li>
+<li>Run the game script using Python: <code>python sokobond.py</code>.</li>
+</ol>
+<h2 id="game-controls">Game Controls</h2>
+<div style="text-align: center;">
+    <img src="resources/images/game.png" style="height:300px;" alt="sokobond">
+</div>
+<ul>
+<li><strong>Movement</strong> : Use the arrow keys to move the hero atom.</li>
+<li><strong>Reset Level</strong> : Press the '<strong>R</strong>' key.</li>
+<li><strong>Hint</strong> : Press the '<strong>H</strong>' key.</li>
+<li><strong>Level Menu</strong> : Press the '<strong>L</strong>' key.</li>
+<li><strong>Main Menu</strong>: Press the '<strong>M</strong>' key.</li>
+<li><strong>Quit Game</strong> : Press the '<strong>Q</strong>' key.</li>
+</ul>
+<h2 id="algorithms-controls">Algorithms controls</h2>
+<ul>
+<li><strong>Depth-First Search</strong> : Press the '<strong>1</strong>' key.</li>
+<li><strong>Breadth-First Search</strong> : Press the '<strong>2</strong>' key.</li>
+<li><strong>Best-first Search</strong> : Press the '<strong>3</strong>' key.</li>
+<li><strong>Greedy Algorithm</strong>: Press the '<strong>4</strong>' key.</li>
+<li><em><em>A</em> Algorithm</em>* : Press the '<strong>5</strong>' key.</li>
+</ul>
+<p>After selecting the algorithm, the AI assistant will automatically solve the level, displaying the chosen solution step by step.</p>
+<h2 id="hint---ai-assistance">Hint - AI Assistance</h2>
+<div style="text-align: center;">
+    <img src="resources/images/hint.png" style="height:300px;" alt="hint">
+</div>
+<ul>
+<li>The AI component provides hints and solutions to help you progress through challenging puzzles, using the A* algorithm.</li>
+<li>Press the 'H' key to activate AI assistance, and it will suggest the next move.</li>
+</ul>
+<h2 id="definition-of-the-game">Definition of the game</h2>
+<p><strong>Sokobond</strong> is a puzzle game with a chemistry theme. It involves using logic and planning to move atoms around a 2D grid to form specific chemical compounds. Even though the game is centered around creating molecules, you don't need any prior knowledge of chemistry to play and enjoy it.</p>
+<p>There are five elements introduced:</p>
+<ul>
+<li><strong>He</strong> : Helium (0 bonds)</li>
+<li><strong>H</strong> : Hydrogen (1 bond)</li>
+<li><strong>O</strong> : Oxygen (2 bonds)</li>
+<li><strong>N</strong> : Nitrogen (3 bonds)</li>
+<li><strong>C</strong> : Carbon (4 bonds)</li>
+</ul>
+<p>There are also 3 powerups in the game:</p>
+<ul>
+<li>
+<p>🔵 -&gt; turns the molecule into a snake (if possible)</p>
+</li>
+<li>
+<p>🟢 -&gt; Duplicate the connection (if possible)</p>
+</li>
+<li>
+<p>🔴 -&gt; Cut the connection.</p>
+</li>
+</ul>
+<h2 id="formulation-of-the-problem-as-a-search-problem">Formulation of the problem as a search problem</h2>
+<ul>
+<li>
+<p><strong>State representation</strong> : Board with the molecules distributed in their respective positions.</p>
+</li>
+<li>
+<p><strong>Initial State</strong> : Board with the molecules distributed in their respective initial positions.</p>
+</li>
+<li>
+<p><strong>Objective Test</strong> : All atoms present on the board with no valence electrons (available bonds) remaining.</p>
+</li>
+<li>
+<p><strong>Operators</strong> : Move the atom (Hero) to</p>
+<ul>
+<li><strong>Up</strong>. Precondition: the atom can move upwards. Cost: 1.</li>
+<li><strong>Down</strong>. Precondition: the atom can move downwards. Cost: 1.</li>
+<li><strong>Left</strong>. Precondition: the atom can move to the left. Cost: 1.</li>
+<li><strong>Right</strong>. Precondition: the atom can move to the right. Cost: 1.</li>
+</ul>
+</li>
+<li>
+<p><strong>Solution Cost</strong> : Total number of moves required to reach the objective test.</p>
+</li>
+</ul>
+<h2 id="uninformed-search-methods">Uninformed search methods</h2>
+<h3 id="depth-first-search-dfs">Depth-First Search (DFS)</h3>
+<p>In DFS, the algorithm traverses depth-wise from the root node to the furthest node possible, exploring each branch completely before moving on to the next branch. This search method is implemented with a depth limit of 30, ensuring that the search does not continue indefinitely and providing a balance between exploration and efficiency.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dfs</span><span class="hljs-params">(board, visited, path, depth, limit)</span>:</span>
+    nextBoards = Algorithms.getNextBoards(board, visited)        
+    visited.add(board)
+
+    <span class="hljs-keyword">if</span> board.win():
+        <span class="hljs-keyword">return</span> path  
+    
+    <span class="hljs-keyword">if</span> depth &gt;= limit:
+        <span class="hljs-keyword">return</span> []
+
+    <span class="hljs-keyword">for</span> nextBoard, direction <span class="hljs-keyword">in</span> nextBoards:
+        path_to_win = Algorithms.dfs(nextBoard, visited, path + [direction], depth + <span class="hljs-number">1</span>, limit)
+        <span class="hljs-keyword">if</span> path_to_win:
+            <span class="hljs-keyword">return</span> path_to_win
+    <span class="hljs-keyword">return</span> []
+</div></code></pre>
+<h3 id="breadth-first-search-bfs">Breadth-First Search (BFS)</h3>
+<p>In BFS, we systematically explore all the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. Thus, the graph is explored level by level, starting from the root node, and moves outward in a breadth-wise manner. By implementing BFS with a depth limit of 30, the algorithm ensures efficient exploration while avoiding infinite loops and unnecessary computational overhead.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bfs</span><span class="hljs-params">(board, limit)</span>:</span>
+    visited = {board}
+    queue = deque([(board, [])])
+
+    <span class="hljs-keyword">while</span> queue:
+        current_board, path = queue.popleft()
+
+        <span class="hljs-keyword">if</span> current_board.win():
+            <span class="hljs-keyword">return</span> path
+
+        <span class="hljs-keyword">if</span> len(path) &gt;= limit:
+            <span class="hljs-keyword">continue</span>
+
+        nextBoards = Algorithms.getNextBoards(current_board, visited)
+
+        <span class="hljs-keyword">for</span> nextBoard, direction <span class="hljs-keyword">in</span> nextBoards:
+            queue.append((nextBoard, path + [direction]))
+            visited.add(nextBoard)
+        
+    <span class="hljs-keyword">return</span> []
+</div></code></pre>
+<h2 id="informed-search-methods">Informed search methods</h2>
+<h3 id="best-first-search">Best-first Search</h3>
+<p>In best-first search, we explored the search space by selecting the most promising node according to a heuristic function. In our implementation, we utilized the nearest neighbor heuristic, which prioritizes nodes based on their proximity to the goal state.</p>
+<p>However, it's important to note that this algorithm may not always lead to a solution due to the inherent complexity of the Sokobond game.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bestFirst</span><span class="hljs-params">(board)</span>:</span>
+    visited = set()
+    path = []
+
+    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+        <span class="hljs-keyword">if</span> board.win(): 
+            <span class="hljs-keyword">return</span> path 
+        
+        visited.add(board)
+
+        nextBoards = Algorithms.getNextBoards(board, visited)
+
+        <span class="hljs-keyword">if</span> nextBoards == []:
+            <span class="hljs-keyword">return</span> []
+
+        nextBoard, direction = Algorithms.greedyMove(board, nextBoards)
+
+        board = nextBoard
+        path.append(direction)
+</div></code></pre>
+<h3 id="greedy-algorithm">Greedy Algorithm</h3>
+<p>The greedy algorithm prioritizes nodes based solely on heuristic information without considering the actual cost of reaching the current position. In our implementation, the cost function (g(n)) for the Greedy Algorithm is always set to 0.</p>
+<p>This means that the algorithm makes decisions solely based on the heuristic function, which can lead to suboptimal solutions but may be computationally more efficient.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">greedySearch</span><span class="hljs-params">(board)</span>:</span>
+    queue = PriorityQueue()
+    visited = {board}
+    
+    board.cost = <span class="hljs-number">0</span>
+    board.heuristic_estimate = <span class="hljs-number">0</span>
+    board.path = []
+    queue.push(board)
+    
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> queue.empty():
+        currentBoard = queue.pop()    
+        
+        <span class="hljs-keyword">if</span> currentBoard.win():
+            <span class="hljs-keyword">return</span> currentBoard.path
+        
+        nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+        <span class="hljs-keyword">for</span> b, direction <span class="hljs-keyword">in</span> nextBoards:
+            visited.add(b)
+            b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction])
+            b.cost = <span class="hljs-number">0</span>
+            b.path = currentBoard.path + [direction]
+            queue.push(b)
+        
+    <span class="hljs-keyword">return</span> []
+</div></code></pre>
+<h3 id="a-algorithm">A* Algorithm</h3>
+<p>A* algorithm combines the benefits of both uniform-cost search and heuristic search. It evaluates nodes based on the sum of two functions: the actual cost <em>g(n)</em>, which represents the number of moves to reach the current position, and the heuristic function <em>h(n)</em>, which estimates the cost to reach the nearest free atom.</p>
+<p>In our implementation, the heuristic function <em>h(n)</em> calculation was designed to consider both the proximity to free atoms and the distance to the closest powerups, assigning them different weights to prioritize connecting atoms first. Specifically, the heuristic function was defined as:</p>
+<pre class="hljs"><code><div>h(n) = distance_to_closest_atom() + <span class="hljs-number">0.1</span> * distance_to_closest_circle()
+</div></code></pre>
+<p>This approach allowed the algorithm to balance the importance of forming connections between atoms while also considering the potential benefit of reaching powerups. By adjusting the weights, we aimed to optimize the search strategy for efficiently solving Sokobond puzzles, particularly those involving powerup utilization.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">aStar</span><span class="hljs-params">(board)</span>:</span>
+    queue = PriorityQueue()
+    visited = {board}
+    
+    board.cost = <span class="hljs-number">0</span>
+    board.heuristic_estimate = <span class="hljs-number">0</span>
+    board.path = []
+    queue.push(board)
+            
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> queue.empty():
+        currentBoard = queue.pop()            
+        
+        <span class="hljs-keyword">if</span> currentBoard.win():
+            <span class="hljs-keyword">return</span> currentBoard.path
+        
+        nextBoards = Algorithms.getNextBoards(currentBoard, visited)
+        <span class="hljs-keyword">for</span> b, direction <span class="hljs-keyword">in</span> nextBoards:
+            visited.add(b)
+            b.heuristic_estimate = currentBoard.greedyMove(MOVE[direction]) + currentBoard.closestCircle(MOVE[direction]) * <span class="hljs-number">0.1</span> 
+            b.cost = currentBoard.cost + <span class="hljs-number">1</span>
+            b.path = currentBoard.path + [direction]
+            queue.push(b)
+    
+    <span class="hljs-keyword">return</span> []
+</div></code></pre>
+<h2 id="results-and-analysis">Results and analysis</h2>
+<p>Due to time constraints, only the first 10 levels were utilized to test the algorithms.</p>
+<h3 id="execution-time">Execution time</h3>
+<div style="text-align: center;">
+    <img src="resources/images/time.png" alt="time">
+</div>
+<p>The execution time varied for each algorithm across different levels, as illustrated in the provided table.</p>
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_time.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_time.png" alt="" style="width:50%;">
+</div>
+<p>Comparing uninformed search methods, BFS exhibited much longer execution times than DFS, which is expected due to their more exhaustive search strategies.</p>
+<p>In informed search methods, the A* Algorithm tended to show a similar pattern to BFS, as it shares similarities with BFS. It's noteworthy that the Best-First Search method, despite yielding solutions in only 2 out of 10 levels, demonstrated significantly quicker execution times compared to all other algorithms.</p>
+<h3 id="solution-quality">Solution Quality</h3>
+<div style="text-align: center;">
+    <img src="resources/images/solution.png" alt="solution">
+</div>
+<p>The table above depicts the solution quality achieved by different algorithms.</p>
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_solution.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_solution.png" alt="" style="width:50%;">
+</div>
+<p>Both BFS and A* Algorithm consistently lead to the optimal solution, demonstrating their effectiveness in finding the most efficient path to solve the Sokobond puzzles.</p>
+<p>In contrast, DFS tends to produce suboptimal solutions, with the solution cost scaling up as the complexity of the puzzle increases. This highlights the limitations of DFS in achieving optimal solutions, especially in more challenging scenarios.</p>
+<h3 id="state-space-explored">State space explored</h3>
+<div style="text-align: center;">
+    <img src="resources/images/space.png" alt="state space">
+</div>
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_space.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_space.png" alt="" style="width:50%;">
+</div>
+<p>In terms of memory usage, there is a clear correlation with execution time. BFS and A* Algorithm utilize the most memory since they need to store all visited nodes in memory. This is necessary for their search strategies, which explore the entire state space systematically or guided by heuristics.</p>
+<p>On the other hand, the Best-First Search method only visits state spaces corresponding to its best neighbor, resulting in more efficient memory usage. Despite its limited success in finding solutions, it demonstrates efficient memory utilization compared to BFS and A* Algorithm.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>In conclusion, this work has provided valuable insights into the performance of various search algorithms in solving Sokobond puzzles. By analyzing the execution time, solution quality, and state space explored by different algorithms, we can draw several conclusions.</p>
+<p>While algorithms like BFS and A* consistently lead to optimal solutions, they tend to consume more memory and exhibit longer execution times due to their exhaustive search strategies. On the other hand, algorithms like DFS and Best-First Search may yield suboptimal solutions but offer faster execution times and more efficient memory usage.</p>
+<p>Ultimately, the choice of algorithm depends on the specific requirements of the problem and the available computational resources. For scenarios where finding the optimal solution is crucial, algorithms like BFS and A* are preferred despite their higher computational cost. However, for applications where speed and memory efficiency are prioritized, algorithms like DFS and Best-First Search provide viable alternatives.</p>
+<p>By understanding the trade-offs between solution quality, execution time, and memory usage, practitioners can make informed decisions when selecting the most appropriate search algorithm for solving Sokobond puzzles or similar problem domains.</p>
+<h2 id="authors">Authors</h2>
+<p>This project was developed by:</p>
+<ul>
+<li>Gonçalo Costa</li>
+<li>Luís Du</li>
+</ul>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 # Sokobond with heuristic Search Methods 
 
 <div style="text-align: center;">
-    <img src="resources/images/sokobond.avif" style="height:400px;" alt="sokobond">
+    <img src="resources/images/sokobond.png" style="height:400px;" alt="sokobond">
 </div>
 
 - [Sokobond with heuristic Search Methods](#sokobond-with-heuristic-search-methods)
@@ -26,7 +26,6 @@
   - [Conclusions](#conclusions)
   - [Authors](#authors)
 
-
 ## Summary
 
 The project focuses on developing heuristic search methods for solving one-player solitaire games, with **Sokobond** being the chosen game for implementation. Utilizing Python along with the Pygame library, the project aims to provide both a playable solitaire game for human players and an automated solver capable of tackling various levels of Sokobond puzzles.
@@ -45,7 +44,7 @@ By combining game development with artificial intelligence techniques, the proje
 ## Game Controls
 
 <div style="text-align: center;">
-    <img src="resources/images/game.png" style="height:400px;" alt="sokobond">
+    <img src="resources/images/game.png" style="height:300px;" alt="sokobond">
 </div>
 
 - **Movement** : Use the arrow keys to move the hero atom.
@@ -54,7 +53,6 @@ By combining game development with artificial intelligence techniques, the proje
 - **Level Menu** : Press the '**L**' key.
 - **Main Menu**: Press the '**M**' key.
 - **Quit Game** : Press the '**Q**' key.
-
 
 ## Algorithms controls
 
@@ -69,7 +67,7 @@ After selecting the algorithm, the AI assistant will automatically solve the lev
 ## Hint - AI Assistance
 
 <div style="text-align: center;">
-    <img src="resources/images/hint.png" style="height:400px;" alt="hint">
+    <img src="resources/images/hint.png" style="height:300px;" alt="hint">
 </div>
 
 - The AI component provides hints and solutions to help you progress through challenging puzzles, using the A* algorithm.
@@ -326,7 +324,6 @@ While algorithms like BFS and A* consistently lead to optimal solutions, they te
 Ultimately, the choice of algorithm depends on the specific requirements of the problem and the available computational resources. For scenarios where finding the optimal solution is crucial, algorithms like BFS and A* are preferred despite their higher computational cost. However, for applications where speed and memory efficiency are prioritized, algorithms like DFS and Best-First Search provide viable alternatives.
 
 By understanding the trade-offs between solution quality, execution time, and memory usage, practitioners can make informed decisions when selecting the most appropriate search algorithm for solving Sokobond puzzles or similar problem domains.
-
 
 ## Authors
 
