@@ -359,7 +359,7 @@ class Game:
         """
         Reset the game by loading the initial state of the current level.
         """
-        self.board = Level(self.level).board
+        self.board = Level(self.level + self.offset).board
         
     def playGame(self):
         """
