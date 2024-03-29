@@ -19,7 +19,12 @@
     - [Best-first Search](#best-first-search)
     - [Greedy Algorithm](#greedy-algorithm)
     - [A\* Algorithm](#a-algorithm)
-  - [Credits](#credits)
+  - [Results and analysis](#results-and-analysis)
+    - [Execution time](#execution-time)
+    - [Solution Quality](#solution-quality)
+    - [State space explored](#state-space-explored)
+  - [Conclusions](#conclusions)
+  - [Authors](#authors)
 
 
 ## Summary
@@ -259,35 +264,73 @@ def aStar(board):
     return []
 ```
 
+## Results and analysis
 
-## Credits
+Due to time constraints, only the first 10 levels were utilized to test the algorithms.
 
-- Developed by [Your Name or Team Name].
-- Powered by Pygame and Python.
+### Execution time
+
+<div style="text-align: center;">
+    <img src="resources/images/time.png" alt="time">
+</div>
+
+The execution time varied for each algorithm across different levels, as illustrated in the provided table.
+
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_time.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_time.png" alt="" style="width:50%;">
+</div>
+
+Comparing uninformed search methods, BFS exhibited much longer execution times than DFS, which is expected due to their more exhaustive search strategies.
+
+In informed search methods, the A* Algorithm tended to show a similar pattern to BFS, as it shares similarities with BFS. It's noteworthy that the Best-First Search method, despite yielding solutions in only 2 out of 10 levels, demonstrated significantly quicker execution times compared to all other algorithms.
+
+### Solution Quality
+
+<div style="text-align: center;">
+    <img src="resources/images/solution.png" alt="solution">
+</div>
+
+The table above depicts the solution quality achieved by different algorithms.
+
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_solution.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_solution.png" alt="" style="width:50%;">
+</div>
+
+Both BFS and A* Algorithm consistently lead to the optimal solution, demonstrating their effectiveness in finding the most efficient path to solve the Sokobond puzzles.
+
+In contrast, DFS tends to produce suboptimal solutions, with the solution cost scaling up as the complexity of the puzzle increases. This highlights the limitations of DFS in achieving optimal solutions, especially in more challenging scenarios.
+
+### State space explored
+
+<div style="text-align: center;">
+    <img src="resources/images/space.png" alt="state space">
+</div>
+
+<div style="display:flex;">
+    <img src="resources/images/graphs/uninformed_space.png" alt="" style="width:50%;">
+    <img src="resources/images/graphs/informed_space.png" alt="" style="width:50%;">
+</div>
+
+In terms of memory usage, there is a clear correlation with execution time. BFS and A* Algorithm utilize the most memory since they need to store all visited nodes in memory. This is necessary for their search strategies, which explore the entire state space systematically or guided by heuristics.
+
+On the other hand, the Best-First Search method only visits state spaces corresponding to its best neighbor, resulting in more efficient memory usage. Despite its limited success in finding solutions, it demonstrates efficient memory utilization compared to BFS and A* Algorithm.
+
+## Conclusions
+
+In conclusion, this work has provided valuable insights into the performance of various search algorithms in solving Sokobond puzzles. By analyzing the execution time, solution quality, and state space explored by different algorithms, we can draw several conclusions.
+
+While algorithms like BFS and A* consistently lead to optimal solutions, they tend to consume more memory and exhibit longer execution times due to their exhaustive search strategies. On the other hand, algorithms like DFS and Best-First Search may yield suboptimal solutions but offer faster execution times and more efficient memory usage.
+
+Ultimately, the choice of algorithm depends on the specific requirements of the problem and the available computational resources. For scenarios where finding the optimal solution is crucial, algorithms like BFS and A* are preferred despite their higher computational cost. However, for applications where speed and memory efficiency are prioritized, algorithms like DFS and Best-First Search provide viable alternatives.
+
+By understanding the trade-offs between solution quality, execution time, and memory usage, practitioners can make informed decisions when selecting the most appropriate search algorithm for solving Sokobond puzzles or similar problem domains.
 
 
-| Level | DFS | BFS | Best-First | Greedy | A\* |
-| ----- | --- | --- | ---------- | ------ | --- |
-| 1     | 14  | 27  | 0          | 15     | 23  |
-| 2     | 24  | 23  | 0          | 20     | 21  |
-| 3     | 102 | 77  | 0          | 100    | 62  |
-| 4     | 151 | 459 | 0          | 105    | 391 |
-| 5     | 38  | 62  | 14         | 32     | 59  |
-| 6     | 24  | 166 | 0          | 39     | 107 |
-| 7     | 30  | 219 | 0          | 222    | 148 |
-| 8     | 54  | 263 | 0          | 152    | 249 |
-| 9     | 24  | 72  | 17         | 60     | 66  |
-| 10    | 187 | 340 | 0          | 533    | 305 |
+## Authors
 
-| Level | DFS                | BFS                | Best-First          | Greedy             | A\*                |
-| ----- | ------------------ | ------------------ | ------------------- | ------------------ | ------------------ |
-| 1     | 0.8021419048309326 | 1.0106089115142822 | 0.4763469696044922  | 0.3754098415374756 | 0.7470529079437256 |
-| 2     | 1.4383280277252197 | 1.1336913108825684 | 0.21555876731872559 | 0.7591400146484375 | 0.9220609664916992 |
-| 3     | 7.939976930618286  | 4.083004951477051  | 0.45690393447875977 | 4.990835189819336  | 2.7785332202911377 |
-| 4     | 13.650975942611694 | 22.883535861968994 | 0.9361181259155273  | 3.2408690452575684 | 17.079802751541138 |
-| 5     | 2.018979787826538  | 2.9781649112701416 | 0.7404899597167969  | 0.8506731986999512 | 2.1123809814453125 |
-| 6     | 1.3543281555175781 | 6.913877964019775  | 1.072571039199829   | 1.369917869567871  | 4.216050386428833  |
-| 7     | 1.898435115814209  | 9.830797910690308  | 1.2657060623168945  | 7.939723968505859  | 6.384228229522705  |
-| 8     | 4.700311183929443  | 18.000312089920044 | 1.117546796798706   | 9.00442123413086   | 16.560086965560913 |
-| 9     | 1.5436511039733887 | 4.392554998397827  | 1.0736608505249023  | 3.6003708839416504 | 3.9867048263549805 |
-| 10    | 14.377259016036987 | 19.581570148468018 | 0.9953858852386475  | 28.475540161132812 | 16.36307406425476  |
+This project was developed by:
+
+- Gonçalo Costa
+- Luís Du
